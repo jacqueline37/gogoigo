@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>囲碁ルール学習ゲーム</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Go Rule Learning Game</p>
+          <h1>囲碁ルール学習ゲーム</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="stage-chip">
+            <span>Stage</span>
+            <strong id="stage-number">1 / 10</strong>
+          </div>
+          <button id="reset-progress-btn" class="ghost-btn" type="button">進行リセット</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel board-panel">
+          <div class="stage-heading">
+            <h2 id="stage-title">ステージタイトル</h2>
+            <p id="stage-subtitle">このステージで学ぶこと</p>
+          </div>
+
+          <div class="board-wrap">
+            <div id="board" class="board" aria-label="5路盤"></div>
+          </div>
+
+          <div class="legend">
+            <span><i class="dot liberty"></i> 呼吸点ヒント</span>
+            <span><i class="dot capture"></i> 取れる石</span>
+            <span><i class="dot target"></i> 目標地点</span>
+          </div>
+        </section>
+
+        <aside class="panel side-panel">
+          <section class="card">
+            <h3>説明</h3>
+            <p id="stage-description"></p>
+          </section>
+
+          <section class="card">
+            <h3>メッセージ</h3>
+            <p id="message" class="message">交点をクリックして石を置いてみましょう。</p>
+          </section>
+
+          <section class="card toggles">
+            <label>
+              <input type="checkbox" id="hint-toggle" checked />
+              呼吸点ヒントを表示
+            </label>
+            <label>
+              <input type="checkbox" id="coord-toggle" />
+              座標を表示
+            </label>
+          </section>
+
+          <section class="card objective-card">
+            <h3>クリア条件</h3>
+            <p id="objective"></p>
+          </section>
+
+          <section class="actions">
+            <button id="retry-btn" type="button">リトライ</button>
+            <button id="prev-btn" class="ghost-btn" type="button">前へ</button>
+            <button id="next-btn" type="button" disabled>次へ</button>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="stages.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
