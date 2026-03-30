@@ -126,10 +126,10 @@ window.STAGES = [
   board: [
     [0, 1, 0, 0, 0],
     [1, 2, 1, 0, 0],
-    [0, 1, 2, 0, 0],
+    [0, 1, 0, 0, 0],
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
-  ],
+  ]
   target: { x: 1, y: 1 },
   goal: { type: "captureCount", count: 1 },
   initialMessage:
