@@ -67,14 +67,20 @@
     }
   }
 
-  function renderList(filterText = "") {
-    clearChildren(listEl);
-
+  function getFilteredTerms(filterText = "") {
     const normalized = filterText.trim();
-    const filteredTerms = window.TERMS.filter((term) => {
+    if (!normalized) return window.TERMS;
+
+    return window.TERMS.filter((term) => {
       const haystack = `${term.title} ${term.yomi || ""} ${term.short || ""} ${term.description || ""}`;
       return haystack.includes(normalized);
     });
+  }
+
+  function renderList(filterText = "") {
+    clearChildren(listEl);
+
+    const filteredTerms = getFilteredTerms(filterText);
 
     if (filteredTerms.length === 0) {
       const empty = document.createElement("div");
@@ -90,6 +96,7 @@
       const item = document.createElement("button");
       item.type = "button";
       item.className = "term";
+
       if (originalIndex === currentIndex) {
         item.classList.add("active");
       }
@@ -154,7 +161,6 @@
     }
 
     btn.addEventListener("click", () => onIntersectionClick(x, y));
-
     return btn;
   }
 
@@ -230,12 +236,11 @@
   }
 
   function resetCurrentTerm() {
-    if (currentTerm) {
-      currentBoard = cloneBoard(currentTerm.board);
-      solved = false;
-      drawBoard();
-      setHint(currentTerm.hint || "");
-    }
+    if (!currentTerm) return;
+    currentBoard = cloneBoard(currentTerm.board);
+    solved = false;
+    drawBoard();
+    setHint(currentTerm.hint || "");
   }
 
   function initEvents() {
