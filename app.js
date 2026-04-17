@@ -25,6 +25,7 @@
   let currentStageIndex = 0;
   let userMove = null;
   let solvedMap = new Map();
+  let autoNextTimer = null;
 
   function sameCoord(a, b) {
     return a && b && a.x === b.x && a.y === b.y;
@@ -32,6 +33,13 @@
 
   function getCurrentStage() {
     return stages[currentStageIndex];
+  }
+
+  function clearAutoNextTimer() {
+    if (autoNextTimer) {
+      clearTimeout(autoNextTimer);
+      autoNextTimer = null;
+    }
   }
 
   function buildTermList() {
@@ -53,6 +61,7 @@
       }
 
       btn.addEventListener("click", () => {
+        clearAutoNextTimer();
         currentStageIndex = index;
         userMove = null;
         setMessage("", "");
@@ -73,7 +82,9 @@
   }
 
   function renderHeader() {
-    stageIndicatorEl.textContent = `第${currentStageIndex + 1}問 / ${stages.length}`;
+    const solvedCount = solvedMap.size;
+    stageIndicatorEl.textContent =
+      `第${currentStageIndex + 1}問 / ${stages.length}（${solvedCount}問クリア）`;
   }
 
   function renderInfo() {
@@ -108,17 +119,31 @@
 
     if (occupied) return;
 
+    clearAutoNextTimer();
     userMove = { x, y };
 
     if (sameCoord(userMove, stage.answer)) {
       solvedMap.set(stage.id, true);
       setMessage(stage.successMessage || "正解です。", "success");
-    } else {
-      setMessage(
-        stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
-        "error"
-      );
+
+      renderBoard();
+      buildTermList();
+      updateButtons();
+      renderHeader();
+
+      if (currentStageIndex < stages.length - 1) {
+        autoNextTimer = setTimeout(() => {
+          goNext();
+        }, 800);
+      }
+
+      return;
     }
+
+    setMessage(
+      stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
+      "error"
+    );
 
     renderBoard();
     buildTermList();
@@ -192,6 +217,7 @@
   }
 
   function resetStage() {
+    clearAutoNextTimer();
     userMove = null;
     setMessage("盤面をリセットしました。", "");
     renderBoard();
@@ -201,6 +227,7 @@
     const ok = window.confirm("最初からやり直しますか？");
     if (!ok) return;
 
+    clearAutoNextTimer();
     currentStageIndex = 0;
     userMove = null;
     solvedMap = new Map();
@@ -213,6 +240,7 @@
   }
 
   function goPrev() {
+    clearAutoNextTimer();
     if (currentStageIndex <= 0) return;
     currentStageIndex -= 1;
     userMove = null;
@@ -221,6 +249,7 @@
   }
 
   function goNext() {
+    clearAutoNextTimer();
     if (currentStageIndex >= stages.length - 1) return;
     currentStageIndex += 1;
     userMove = null;
