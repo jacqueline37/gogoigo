@@ -1,138 +1,263 @@
 (() => {
-
-  const SIZE = 9;
-
   const boardEl = document.getElementById("board");
   const titleEl = document.getElementById("term-title");
-  const descEl = document.getElementById("term-description");
+  const descriptionEl = document.getElementById("term-description");
+  const instructionEl = document.getElementById("term-instruction");
   const messageEl = document.getElementById("message");
-  const listEl = document.getElementById("term-list");
-  const indicatorEl = document.getElementById("stage-indicator");
+  const stageIndicatorEl = document.getElementById("stage-indicator");
+  const termListEl = document.getElementById("term-list");
 
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
   const resetBtn = document.getElementById("reset-btn");
+  const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
+  const sidebarEl = document.getElementById("sidebar");
 
-  let currentIndex = 0;
-  let board = [];
-  let target = null;
-  let solved = false;
-
-  function normalizeBoard(src){
-    const offset = Math.floor((SIZE - src.length)/2);
-    const newBoard = Array.from({length:SIZE},()=>Array(SIZE).fill(0));
-
-    for(let y=0;y<src.length;y++){
-      for(let x=0;x<src[y].length;x++){
-        newBoard[y+offset][x+offset]=src[y][x];
-      }
-    }
-    return newBoard;
+  if (!window.STAGES || !Array.isArray(window.STAGES) || window.STAGES.length === 0) {
+    titleEl.textContent = "データが見つかりません";
+    descriptionEl.textContent = "stages.js の読み込みに失敗している可能性があります。";
+    return;
   }
 
-  function normalizeTarget(t, size){
-    const offset = Math.floor((SIZE - size)/2);
-    return {x:t.x+offset,y:t.y+offset};
+  const stages = window.STAGES;
+
+  let currentStageIndex = 0;
+  let userMove = null;
+  let solvedMap = new Map();
+
+  function coordKey(x, y) {
+    return `${x},${y}`;
   }
 
-  function loadStage(i){
-    const s = STAGES[i];
-
-    board = normalizeBoard(s.board);
-    target = normalizeTarget(s.correct, s.board.length);
-    solved = false;
-
-    titleEl.textContent = s.title;
-    descEl.textContent = s.description;
-    indicatorEl.textContent = `${i+1} / ${STAGES.length}`;
-
-    messageEl.textContent = "赤い位置に打ってみましょう";
-
-    draw();
-    renderList();
+  function sameCoord(a, b) {
+    return a && b && a.x === b.x && a.y === b.y;
   }
 
-  function draw(){
-    boardEl.innerHTML = "";
-
-    for(let y=0;y<SIZE;y++){
-      for(let x=0;x<SIZE;x++){
-
-        const d=document.createElement("div");
-        d.className="intersection";
-        d.style.left=`${(x/(SIZE-1))*100}%`;
-        d.style.top=`${(y/(SIZE-1))*100}%`;
-
-        if(!solved && x===target.x && y===target.y){
-          d.classList.add("target");
-        }
-
-        if(board[y][x]){
-          const s=document.createElement("div");
-          s.className="stone "+(board[y][x]==1?"black":"white");
-          d.appendChild(s);
-        }
-
-        d.onclick=()=>click(x,y);
-
-        boardEl.appendChild(d);
-      }
-    }
+  function getCurrentStage() {
+    return stages[currentStageIndex];
   }
 
-  function click(x,y){
-    if(solved) return;
+  function buildTermList() {
+    termListEl.innerHTML = "";
 
-    if(board[y][x]!==0){
-      messageEl.textContent="そこには置けません";
-      return;
-    }
+    stages.forEach((stage, index) => {
+      const btn = document.createElement("button");
+      btn.className = "term-item";
+      btn.type = "button";
+      btn.dataset.index = String(index);
 
-    if(x===target.x && y===target.y){
-      board[y][x]=STAGES[currentIndex].moveColor;
-      solved=true;
-      messageEl.textContent=STAGES[currentIndex].success;
-      draw();
-    }else{
-      messageEl.textContent="そこじゃない";
-    }
-  }
+      const solved = solvedMap.get(stage.id) ? "✓ " : "";
+      btn.innerHTML = `
+        <span class="term-index">${String(index + 1).padStart(2, "0")}</span>
+        <span>${solved}${stage.title}</span>
+      `;
 
-  function renderList(){
-    listEl.innerHTML="";
-
-    STAGES.forEach((s,i)=>{
-      const b=document.createElement("button");
-      b.textContent=`${String(i+1).padStart(2,"0")} ${s.title}`;
-
-      if(i===currentIndex){
-        b.classList.add("active");
+      if (index === currentStageIndex) {
+        btn.classList.add("active");
       }
 
-      b.onclick=()=>loadStage(i);
+      btn.addEventListener("click", () => {
+        currentStageIndex = index;
+        userMove = null;
+        setMessage("", "");
+        renderAll();
+        closeSidebarOnMobile();
+      });
 
-      listEl.appendChild(b);
+      termListEl.appendChild(btn);
     });
   }
 
-  prevBtn.onclick=()=>{
-    if(currentIndex>0){
-      currentIndex--;
-      loadStage(currentIndex);
+  function setMessage(text, type = "") {
+    messageEl.textContent = text;
+    messageEl.className = "message";
+    if (type) {
+      messageEl.classList.add(type);
     }
-  };
+  }
 
-  nextBtn.onclick=()=>{
-    if(currentIndex<STAGES.length-1){
-      currentIndex++;
-      loadStage(currentIndex);
+  function renderHeader() {
+    stageIndicatorEl.textContent = `第${currentStageIndex + 1}問 / ${stages.length}`;
+  }
+
+  function renderInfo() {
+    const stage = getCurrentStage();
+    titleEl.textContent = `${String(currentStageIndex + 1).padStart(2, "0")} ${stage.title}`;
+    descriptionEl.textContent = stage.description;
+    instructionEl.textContent = stage.instruction || "盤面の交点をクリックして答えを選んでください。";
+  }
+
+  function createStone(color, ghost = false) {
+    const stone = document.createElement("div");
+    stone.className = `stone ${color}${ghost ? " ghost" : ""}`;
+    return stone;
+  }
+
+  function createMarker(text, useWhiteText = false) {
+    const marker = document.createElement("div");
+    marker.className = `marker ${useWhiteText ? "white-text" : "black-text"}`;
+    marker.textContent = text;
+    return marker;
+  }
+
+  function getStoneAt(stage, x, y) {
+    return (stage.stones || []).find((s) => s.x === x && s.y === y);
+  }
+
+  function getLabelAt(stage, x, y) {
+    return (stage.labels || []).find((l) => l.x === x && l.y === y);
+  }
+
+  function shouldShowStarPoint(size, x, y) {
+    if (size !== 9) return false;
+    const points = [
+      [2, 2], [2, 6], [6, 2], [6, 6], [4, 4]
+    ];
+    return points.some(([px, py]) => px === x && py === y);
+  }
+
+  function handleCellClick(x, y) {
+    const stage = getCurrentStage();
+    const occupied = getStoneAt(stage, x, y);
+
+    if (occupied) return;
+    if (stage.lockAfterCorrect && solvedMap.get(stage.id)) return;
+
+    userMove = { x, y };
+
+    if (sameCoord(userMove, stage.answer)) {
+      solvedMap.set(stage.id, true);
+      setMessage(stage.successMessage || "正解です。", "success");
+    } else {
+      setMessage(stage.failureMessage || "そこではありません。もう一度考えてみましょう。", "error");
     }
-  };
 
-  resetBtn.onclick=()=>{
-    loadStage(currentIndex);
-  };
+    renderBoard();
+    buildTermList();
+    updateButtons();
+  }
 
-  loadStage(0);
+  function renderBoard() {
+    const stage = getCurrentStage();
+    const size = stage.boardSize || 9;
+    boardEl.innerHTML = "";
+    boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
 
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "cell";
+
+        if (y === 0) cell.classList.add("edge-top");
+        if (y === size - 1) cell.classList.add("edge-bottom");
+        if (x === 0) cell.classList.add("edge-left");
+        if (x === size - 1) cell.classList.add("edge-right");
+
+        cell.setAttribute("aria-label", `${x + 1}列 ${y + 1}行`);
+
+        const fixedStone = getStoneAt(stage, x, y);
+        const label = getLabelAt(stage, x, y);
+
+        const correctSolved = solvedMap.get(stage.id) && sameCoord(stage.answer, { x, y });
+        if (correctSolved) {
+          cell.classList.add("highlight-answer");
+        }
+
+        if (shouldShowStarPoint(size, x, y) && !fixedStone && !sameCoord(userMove, { x, y })) {
+          const star = document.createElement("div");
+          star.className = "star-point-dot";
+          cell.appendChild(star);
+        }
+
+        if (fixedStone) {
+          const stone = createStone(fixedStone.color);
+          cell.appendChild(stone);
+        }
+
+        if (label) {
+          const labelOnBlack = fixedStone && fixedStone.color === "black";
+          cell.appendChild(createMarker(label.text, labelOnBlack));
+        }
+
+        if (userMove && sameCoord(userMove, { x, y })) {
+          const isCorrect = sameCoord(stage.answer, userMove);
+          const color = stage.player === "white" ? "white" : "black";
+          const ghostStone = createStone(color, false);
+          ghostStone.style.outline = isCorrect
+            ? "3px solid rgba(31,107,42,0.7)"
+            : "3px solid rgba(140,45,45,0.65)";
+          cell.appendChild(ghostStone);
+        }
+
+        cell.addEventListener("click", () => handleCellClick(x, y));
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function updateButtons() {
+    prevBtn.disabled = currentStageIndex === 0;
+    nextBtn.disabled = currentStageIndex === stages.length - 1;
+  }
+
+  function renderAll() {
+    renderHeader();
+    renderInfo();
+    renderBoard();
+    buildTermList();
+    updateButtons();
+  }
+
+  function resetStage() {
+    const stage = getCurrentStage();
+    userMove = null;
+    setMessage(stage.resetMessage || "盤面をリセットしました。", "");
+    renderBoard();
+  }
+
+  function goPrev() {
+    if (currentStageIndex <= 0) return;
+    currentStageIndex -= 1;
+    userMove = null;
+    setMessage("", "");
+    renderAll();
+  }
+
+  function goNext() {
+    if (currentStageIndex >= stages.length - 1) return;
+    currentStageIndex += 1;
+    userMove = null;
+    setMessage("", "");
+    renderAll();
+  }
+
+  function closeSidebarOnMobile() {
+    if (window.innerWidth <= 920) {
+      sidebarEl.classList.remove("open");
+      toggleSidebarBtn.setAttribute("aria-expanded", "false");
+      toggleSidebarBtn.textContent = "用語一覧を開く";
+    }
+  }
+
+  function toggleSidebar() {
+    const isOpen = sidebarEl.classList.toggle("open");
+    toggleSidebarBtn.setAttribute("aria-expanded", String(isOpen));
+    toggleSidebarBtn.textContent = isOpen ? "用語一覧を閉じる" : "用語一覧を開く";
+  }
+
+  prevBtn.addEventListener("click", goPrev);
+  nextBtn.addEventListener("click", goNext);
+  resetBtn.addEventListener("click", resetStage);
+  toggleSidebarBtn.addEventListener("click", toggleSidebar);
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 920) {
+      sidebarEl.classList.remove("open");
+      toggleSidebarBtn.setAttribute("aria-expanded", "false");
+      toggleSidebarBtn.textContent = "用語一覧を開く";
+    }
+  });
+
+  renderAll();
 })();
