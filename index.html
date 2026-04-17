@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>囲碁用語 体験サイト</title>
-  <link rel="stylesheet" href="styles.css"/>
-   <!-- Google tag (gtag.js) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>囲碁用語を体験で学ぶ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -16,28 +16,75 @@
 </script>
 </head>
 <body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-left">
+        <p class="eyebrow">Interactive Go Terms</p>
+        <h1>囲碁用語を体験で学ぶ</h1>
+        <p class="subtitle">
+          図を見るだけでなく、実際に「ここに打つ」を試して囲碁用語を覚えるサイトです。
+        </p>
+      </div>
+    </header>
 
-<header>
-  <h1>囲碁用語を体験で学ぶ</h1>
-  <input id="search" placeholder="用語検索..." />
-</header>
+    <main class="layout">
+      <aside class="sidebar panel">
+        <div class="search-wrap">
+          <label for="search" class="search-label">用語検索</label>
+          <input
+            id="search"
+            type="text"
+            placeholder="例：キリ、ツギ、トビ"
+            autocomplete="off"
+          />
+        </div>
 
-<main>
-  <aside id="list"></aside>
+        <div class="list-header">
+          <h2>基本囲碁用語</h2>
+          <p>19語を一覧表示しています</p>
+        </div>
 
-  <section id="detail">
-    <h2 id="title">用語を選択</h2>
-    <p id="desc"></p>
+        <div id="list" class="term-list" aria-label="囲碁用語一覧"></div>
+      </aside>
 
-    <div id="board" class="board"></div>
+      <section class="content panel">
+        <div class="detail-header">
+          <div class="detail-title-wrap">
+            <p class="detail-kicker">用語の体験</p>
+            <h2 id="title">用語を選択</h2>
+          </div>
+        </div>
 
-    <p id="hint"></p>
+        <div class="detail-body">
+          <div class="info-card">
+            <h3>説明</h3>
+            <p id="desc">左の一覧から用語を選んでください。</p>
+          </div>
 
-    <button id="reset">リセット</button>
-  </section>
-</main>
+          <div class="board-card">
+            <div class="board-card-header">
+              <div>
+                <h3>ミニ盤面</h3>
+                <p>赤い目標地点に打ってみましょう</p>
+              </div>
+              <button id="reset" type="button" class="ghost-btn">リセット</button>
+            </div>
 
-<script src="terms.js"></script>
-<script src="app.js"></script>
+            <div class="board-wrap">
+              <div id="board" class="board" aria-label="5路盤"></div>
+            </div>
+          </div>
+
+          <div class="hint-card">
+            <h3>ヒント</h3>
+            <p id="hint" class="hint"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="terms.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
