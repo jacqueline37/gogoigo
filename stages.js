@@ -1,343 +1,290 @@
 window.STAGES = [
   {
-    id: 1,
+    id: "kiri",
     title: "キリ",
-    short: "石の間に打って分断する手",
-    description:
-      "黒は上下でつながった形を作っています。白はどこに打てば、黒のつながりを断てるでしょうか？",
-    board: [
-      [0, 0, 1, 0, 0],
-      [0, 1, 0, 1, 0],
-      [0, 1, 0, 1, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 2 },
-    success: "キリです。黒のつながりを断ち、2つのグループに分けました。"
+    description: "相手のつながりを断つ手です。石同士の連絡を切って、別々にしてしまいます。",
+    instruction: "黒どうしの連絡を断つ白1の場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 3 },
+    successMessage: "正解です。キリは、相手のつながりを断つ基本の手です。",
+    failureMessage: "そこだと切れていません。黒の連絡が切れる交点を見てみましょう。",
+    stones: [
+      { x: 3, y: 3, color: "black" },
+      { x: 5, y: 3, color: "black" },
+      { x: 4, y: 2, color: "white" },
+      { x: 4, y: 4, color: "white" }
+    ]
   },
-
   {
-    id: 2,
+    id: "tsugi",
     title: "ツギ",
-    short: "石をつないで切られないようにする手",
-    description:
-      "白に切られそうな黒があります。黒はどこに打てば、石をしっかりつなげるでしょうか？",
-    board: [
-      [0, 0, 1, 0, 0],
-      [0, 1, 2, 1, 0],
-      [0, 1, 0, 1, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 2 },
-    success: "ツギです。黒石がしっかりつながり、切られにくい形になりました。"
+    description: "切られないように石をつなぐ手です。離れた石同士を安全につなげる基本形です。",
+    instruction: "白に切られないよう、黒がつなぐ場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 4, y: 3 },
+    successMessage: "正解です。ツギは、自分の石を切られないようにつなぐ手です。",
+    failureMessage: "そこでは十分につながりません。2つの黒石を直接つなげる点を選びましょう。",
+    stones: [
+      { x: 3, y: 3, color: "black" },
+      { x: 5, y: 3, color: "black" },
+      { x: 4, y: 2, color: "white" }
+    ]
   },
-
   {
-    id: 3,
+    id: "hane",
     title: "ハネ",
-    short: "相手の石に沿って曲がる手",
-    description:
-      "白は黒の外側に沿って、相手を押さえるように曲がりたいです。どこに打てばハネでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "ハネです。相手の石の外側に沿って曲がりました。"
+    description: "相手の石の横を曲がるように打ち、頭をおさえたり進路を制限したりする手です。",
+    instruction: "白が黒の頭をおさえるハネの位置をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 2 },
+    successMessage: "正解です。相手の頭を押さえるように曲がる手がハネです。",
+    failureMessage: "ハネは、相手の石の横を曲がる感じの手です。",
+    stones: [
+      { x: 4, y: 3, color: "black" },
+      { x: 3, y: 3, color: "white" }
+    ]
   },
-
   {
-    id: 4,
+    id: "osae",
     title: "オサエ",
-    short: "相手の進行を止める手",
-    description:
-      "白が入り込んできそうです。黒はどこに打てば、白の進行を止めるオサエになるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 1 },
-    success: "オサエです。白が進みたい方向を黒が止めました。"
+    description: "相手が出ていこうとするところを止める手です。進路をふさぐ意味合いがあります。",
+    instruction: "白が上に出ようとしています。黒がオサエる場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 4, y: 2 },
+    successMessage: "正解です。相手の進出を止めるのがオサエです。",
+    failureMessage: "相手の進みたい方向を止める位置を探しましょう。",
+    stones: [
+      { x: 4, y: 3, color: "white" },
+      { x: 3, y: 3, color: "black" }
+    ]
   },
-
   {
-    id: 5,
+    id: "magari",
     title: "マガリ",
-    short: "直角に曲がる手",
-    description:
-      "黒は辺沿いの形をしっかりまとめたいです。どこに打てば直角に曲がるマガリになるでしょうか？",
-    board: [
-      [0, 1, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 2 },
-    success: "マガリです。直角に曲がるしっかりした形になりました。"
+    description: "直角に曲がって打つ手です。形がしっかりしていて、連絡にも使われます。",
+    instruction: "黒が直角に曲がって形を整える場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 4, y: 4 },
+    successMessage: "正解です。直角に曲がる手がマガリです。",
+    failureMessage: "マガリは、今ある黒石から直角方向に曲がる手です。",
+    stones: [
+      { x: 3, y: 3, color: "black" },
+      { x: 4, y: 3, color: "black" }
+    ]
   },
-
   {
-    id: 6,
-    title: "一間",
-    short: "1つ空点をあけて打つ形",
-    description:
-      "白は少し間をあけて形を作りたいです。どこに打てば『一間』になるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "一間です。1つ空点をあけて、少しゆとりのある形を作りました。"
+    id: "ikken",
+    title: "一間（いっけん）",
+    description: "石から一路あけて打つ形です。攻めにも守りにもよく出てくる基本の間隔です。",
+    instruction: "白石から一路あけて右に打つ一間の場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 5, y: 4 },
+    successMessage: "正解です。一路あけて打つ形が一間です。",
+    failureMessage: "一間は、石との間にちょうど1つの交点があく形です。",
+    stones: [
+      { x: 3, y: 4, color: "white" }
+    ]
   },
-
   {
-    id: 7,
+    id: "watari",
     title: "ワタリ",
-    short: "辺を使って連絡する手",
-    description:
-      "白石どうしが辺沿いで離れています。どこに打てば、辺を使ってつながるワタリになるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [2, 0, 2, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 1 },
-    success: "ワタリです。辺を使って白石どうしが連絡しました。"
+    description: "盤端を使って石同士が連絡することです。特に端では重要な手筋です。",
+    instruction: "白が下辺を使って連絡するワタリの場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 7 },
+    successMessage: "正解です。端を利用してつながるのがワタリです。",
+    failureMessage: "端を使って、2つの白石が連絡できる場所を見つけましょう。",
+    stones: [
+      { x: 3, y: 6, color: "white" },
+      { x: 5, y: 6, color: "white" },
+      { x: 4, y: 6, color: "black" }
+    ]
   },
-
   {
-    id: 8,
+    id: "nozoki",
     title: "ノゾキ",
-    short: "次に切りますよ、と迫る手",
-    description:
-      "黒には切られたくない形があります。白はどこに打てば、次にキリを見せるノゾキになるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 0, 1, 0],
-      [0, 1, 2, 1, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "ノゾキです。黒は放っておくと切られるので、受けを考えなければなりません。"
+    description: "『次に切りますよ』と相手に受けを迫る手です。すぐに切る手そのものではありません。",
+    instruction: "黒に受けを迫る白のノゾキの場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 2 },
+    successMessage: "正解です。ノゾキは、相手に『受けないと困りますよ』と迫る手です。",
+    failureMessage: "今すぐ切るのではなく、次に切れる形を見せる手がノゾキです。",
+    stones: [
+      { x: 3, y: 3, color: "black" },
+      { x: 4, y: 3, color: "black" },
+      { x: 5, y: 3, color: "white" },
+      { x: 2, y: 3, color: "white" }
+    ]
   },
-
   {
-    id: 9,
+    id: "tsuke",
     title: "ツケ",
-    short: "相手の石に直接くっつく手",
-    description:
-      "白は黒石に直接くっついて接触戦を始めたいです。どこに打てばツケでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 2 },
-    success: "ツケです。相手の石に直接くっついて接触しました。"
+    description: "相手の石にぴったりくっつけて打つ手です。接近戦の起点になります。",
+    instruction: "白が黒石にツケる場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 5, y: 4 },
+    successMessage: "正解です。相手の石にぴったり接する手がツケです。",
+    failureMessage: "ツケは、相手の石に直接くっつく手です。",
+    stones: [
+      { x: 4, y: 4, color: "black" }
+    ]
   },
-
   {
-    id: 10,
+    id: "tobi",
     title: "トビ",
-    short: "少し離れて進む手",
-    description:
-      "白は中央へ向かって少し離れて進みたいです。どこに打てば『トビ』になるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "トビです。少し離れて前へ進みました。"
+    description: "石から飛ぶように離れて打つ手です。中央への発展や軽い連絡に使います。",
+    instruction: "白が右に一間トビする場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 5, y: 4 },
+    successMessage: "正解です。軽く前に出る基本形が一間トビです。",
+    failureMessage: "トビは、くっつくのではなく1つ飛んで進むイメージです。",
+    stones: [
+      { x: 3, y: 4, color: "white" }
+    ]
   },
-
   {
-    id: 11,
+    id: "butsukari",
     title: "ブツカリ",
-    short: "相手に正面からぶつかる手",
-    description:
-      "白は黒の進行に対して正面からぶつかりたいです。どこに打てばブツカリでしょうか？",
-    board: [
-      [0, 1, 2, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 2 },
-    success: "ブツカリです。相手に正面からぶつかる形になりました。"
+    description: "相手の石にぶつかるように打つ手です。押さえ込みや戦いのきっかけになります。",
+    instruction: "白が黒にぶつかるブツカリの場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 3 },
+    successMessage: "正解です。相手に正面からぶつかる手がブツカリです。",
+    failureMessage: "ブツカリは、相手の進路にぶつかる感覚の手です。",
+    stones: [
+      { x: 4, y: 4, color: "black" },
+      { x: 3, y: 4, color: "white" }
+    ]
   },
-
   {
-    id: 12,
+    id: "oshi",
     title: "オシ",
-    short: "相手を押しつける手",
-    description:
-      "白は黒を圧迫しながら押していきたいです。どこに打てばオシでしょうか？",
-    board: [
-      [0, 2, 1, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 0 },
-    success: "オシです。白が黒を押しつける形になりました。"
+    description: "相手を押しつけるように打ち、圧迫する手です。相手に受けを強要しやすい形です。",
+    instruction: "白が黒を押すオシの場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 2 },
+    successMessage: "正解です。相手を圧迫する手がオシです。",
+    failureMessage: "相手の石を外から押しつける位置を探してみましょう。",
+    stones: [
+      { x: 4, y: 3, color: "black" },
+      { x: 3, y: 3, color: "white" }
+    ]
   },
-
   {
-    id: 13,
+    id: "hai",
     title: "ハイ",
-    short: "低い位置をはうように打つ手",
-    description:
-      "黒は辺沿いを低く進みたいです。どこに打てば、はうような『ハイ』になるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [1, 2, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 1 },
-    success: "ハイです。黒が低い位置をはうように進みました。"
+    description: "低いところを這うように進む手です。辺での細かい攻防でよく出てきます。",
+    instruction: "黒が下辺を這うハイの場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 4, y: 7 },
+    successMessage: "正解です。辺を低く這うように進むのがハイです。",
+    failureMessage: "ハイは、辺に沿って低く進む手です。",
+    stones: [
+      { x: 3, y: 7, color: "black" },
+      { x: 3, y: 6, color: "white" }
+    ]
   },
-
   {
-    id: 14,
+    id: "hiki",
     title: "ヒキ",
-    short: "自分の方へ引く手",
-    description:
-      "黒は前へ出るより、自分の石の方へ引いて形を整えたいです。どこに打てばヒキでしょうか？",
-    board: [
-      [0, 1, 2, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 1, y: 1 },
-    success: "ヒキです。自分の石の方へ引いて、安定した形にしました。"
+    description: "自分の方へ引くように打つ手です。ツケたあとの形でよく現れます。",
+    instruction: "黒が自分の方へ引くヒキの場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 3, y: 4 },
+    successMessage: "正解です。自分の石の方向へ引く手がヒキです。",
+    failureMessage: "ヒキは、前進よりも自分の側へ引きつける感じです。",
+    stones: [
+      { x: 4, y: 4, color: "black" },
+      { x: 5, y: 4, color: "white" },
+      { x: 5, y: 3, color: "black" }
+    ]
   },
-
   {
-    id: 15,
+    id: "nobi",
     title: "ノビ",
-    short: "まっすぐ外へ伸びる手",
-    description:
-      "黒は自分の勢力を外側へ広げたいです。どこに打てば『ノビ』になるでしょうか？",
-    board: [
-      [0, 2, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 1, y: 2 },
-    success: "ノビです。黒がまっすぐ外へ伸びる形になりました。"
+    description: "外側へまっすぐ伸びる手です。ヒキと対になる感覚で覚えると分かりやすいです。",
+    instruction: "黒が外側へ伸びるノビの場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 5, y: 4 },
+    successMessage: "正解です。外へ向かって伸びる手がノビです。",
+    failureMessage: "ノビは、後ろに引くのでなく外側へ伸びる手です。",
+    stones: [
+      { x: 4, y: 4, color: "black" },
+      { x: 4, y: 3, color: "white" }
+    ]
   },
-
   {
-    id: 16,
+    id: "kakae",
     title: "カカエ",
-    short: "相手の石を抱えるように取る手",
-    description:
-      "白は黒石の逃げ道をふさぎ、抱えるように攻めたいです。どこに打てばカカエでしょうか？",
-    board: [
-      [0, 2, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 0 },
-    success: "カカエです。白が黒石の逃げ道をふさぐ形になりました。"
+    description: "相手の石を逃がさないように、抱え込むように打つ手です。取りに行くときの基本です。",
+    instruction: "白1子を逃がさないよう、黒がカカえる場所をクリックしてください。",
+    boardSize: 9,
+    player: "black",
+    answer: { x: 5, y: 4 },
+    successMessage: "正解です。相手石を閉じ込めるように打つのがカカエです。",
+    failureMessage: "逃げ道をふさぐ位置を探してみてください。",
+    stones: [
+      { x: 4, y: 4, color: "white" },
+      { x: 4, y: 3, color: "black" },
+      { x: 3, y: 4, color: "black" },
+      { x: 4, y: 5, color: "black" }
+    ]
   },
-
   {
-    id: 17,
+    id: "sagari",
     title: "サガリ",
-    short: "盤端に向かって下がる手",
-    description:
-      "白は中央へ行くのではなく、辺に向かって低く安定させたいです。どこに打てばサガリでしょうか？",
-    board: [
-      [0, 2, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 1 },
-    success: "サガリです。白が辺へ向かって低く安定しました。"
+    description: "一段下がるように打つ手です。辺の地を守ったり、形を安定させたりします。",
+    instruction: "白が一段下がるサガリの場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 7 },
+    successMessage: "正解です。ひとつ下がって形を安定させるのがサガリです。",
+    failureMessage: "サガリは、上に伸びるのでなく一段低く下がる手です。",
+    stones: [
+      { x: 4, y: 6, color: "white" }
+    ]
   },
-
   {
-    id: 18,
+    id: "kosumi",
     title: "コスミ",
-    short: "斜めに打つ手",
-    description:
-      "黒は石から斜めに伸びて、やわらかい形を作りたいです。どこに打てばコスミでしょうか？",
-    board: [
-      [0, 1, 0, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 1 },
-    success: "コスミです。黒が斜めに打って、やわらかい形になりました。"
+    description: "斜めに1つずれるように打つ手です。形が柔らかく、実戦でとてもよく使います。",
+    instruction: "白石から右下へコスむ場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 4, y: 4 },
+    successMessage: "正解です。斜めに一つずれる手がコスミです。",
+    failureMessage: "コスミは、縦横ではなく斜めの連絡です。",
+    stones: [
+      { x: 3, y: 3, color: "white" }
+    ]
   },
-
   {
-    id: 19,
+    id: "hiraki",
     title: "ヒラキ",
-    short: "辺に向かって広く展開する手",
-    description:
-      "白は辺へ広く展開したいです。どこに打てば『ヒラキ』になるでしょうか？",
-    board: [
-      [0, 2, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0]
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 0 },
-    success: "ヒラキです。白が辺へ向かって広く展開しました。"
+    description: "すでにある石から、地を広げるように大きく開く手です。隅や辺の基本です。",
+    instruction: "左下の白から、辺に沿って大きくヒラく場所をクリックしてください。",
+    boardSize: 9,
+    player: "white",
+    answer: { x: 5, y: 7 },
+    successMessage: "正解です。勢力や地を広げるように開く手がヒラキです。",
+    failureMessage: "ヒラキは、くっつくのではなく少し大きめに間をあける手です。",
+    stones: [
+      { x: 2, y: 7, color: "white" }
+    ]
   }
 ];
