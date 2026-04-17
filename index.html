@@ -16,82 +16,43 @@
 </script>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="site-header">
-      <div class="site-header__inner">
-        <p class="eyebrow">Interactive Go Terms</p>
-        <h1>囲碁の基本用語を体験で学ぶ</h1>
-        <p class="site-lead">
-          このサイトは、囲碁の基本用語を「読むだけ」でなく、
-          実際に盤面を見ながら体験して覚えるための学習サイトです。
-        </p>
+
+<div class="app">
+
+  <header>
+    <h1>囲碁の基本用語（体験版）</h1>
+    <p id="stage-indicator"></p>
+  </header>
+
+  <main class="layout">
+
+    <!-- 左：一覧 -->
+    <aside class="sidebar">
+      <h2>19の基本用語</h2>
+      <div id="term-list"></div>
+    </aside>
+
+    <!-- 右：内容 -->
+    <section class="content">
+      <h2 id="term-title"></h2>
+      <p id="term-description"></p>
+
+      <div id="board" class="board"></div>
+
+      <p id="message"></p>
+
+      <div class="controls">
+        <button id="prev-btn">← 前へ</button>
+        <button id="reset-btn">リセット</button>
+        <button id="next-btn">次へ →</button>
       </div>
-    </header>
+    </section>
 
-    <main class="layout">
-      <aside class="sidebar panel">
-        <section class="intro-card">
-          <h2>このサイトについて</h2>
-          <p>
-            収録しているのは、キリ、ツギ、ハネ、オサエ、マガリ、
-            一間、ワタリ、ノゾキ、ツケ、トビ、ブツカリ、オシ、
-            ハイ、ヒキ、ノビ、カカエ、サガリ、コスミ、ヒラキの19語です。
-          </p>
-          <p>
-            左の一覧から用語を選ぶか、下の「前へ」「次へ」で進んでください。
-            赤い丸は、この用語を体験するための一手の位置です。
-          </p>
-        </section>
+  </main>
 
-        <section class="list-card">
-        <h2>19の基本囲碁用語</h2>
-        <div id="term-list" class="term-list"></div>
-        </section>
-      </aside>
+</div>
 
-      <section class="content panel">
-        <div class="content-head">
-          <div>
-            <p class="content-kicker">用語の体験</p>
-            <h2 id="term-title">用語を選択</h2>
-          </div>
-        </div>
-
-        <section class="description-card">
-          <h3>説明</h3>
-          <p id="term-description">
-            左の一覧から用語を選んでください。
-          </p>
-        </section>
-
-        <section class="board-card">
-          <div class="board-card__head">
-            <div>
-              <h3>ミニ盤面</h3>
-              <p>赤い丸の位置を考えて打ってみましょう</p>
-            </div>
-          </div>
-
-          <div class="board-wrap">
-            <div id="board" class="board" aria-label="9路盤"></div>
-          </div>
-        </section>
-
-        <section class="hint-card">
-          <h3>メッセージ</h3>
-          <p id="message" class="message"></p>
-        </section>
-
-        <section class="controls">
-          <button id="prev-btn" type="button" class="secondary-btn">← 前へ</button>
-          <button id="reset-btn" type="button" class="secondary-btn">リセット</button>
-          <button id="next-btn" type="button" class="primary-btn">次へ →</button>
-        </section>
-      </section>
-    </main>
-  </div>
-
-  <script src="stages.js"></script>
-  <script src="app.js"></script>
+<script src="stages.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
