@@ -1,87 +1,456 @@
-body {
+:root {
+  --bg: #f5f2ea;
+  --panel: #fffdf8;
+  --panel-2: #f7f2e7;
+  --line: #d8c7a2;
+  --text: #2b2419;
+  --muted: #6d624f;
+  --accent: #7b5b2e;
+  --accent-2: #a17b43;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  --board-cell: min(8vw, 48px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  font-family: sans-serif;
-  background: #f5f1e8;
+  padding: 0;
+  background: linear-gradient(180deg, #f8f5ee 0%, #f2ecdf 100%);
+  color: var(--text);
+  font-family:
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    "Meiryo",
+    system-ui,
+    sans-serif;
 }
 
-.layout {
+body {
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.app {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 20px 0 36px;
+}
+
+.site-header {
   display: flex;
+  justify-content: space-between;
   gap: 20px;
-  padding: 20px;
+  align-items: flex-start;
+  margin-bottom: 18px;
 }
 
-.sidebar {
-  width: 220px;
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
 }
 
-.content {
-  flex: 1;
+h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.2;
 }
 
-/* 一覧 */
-#term-list button {
-  width: 100%;
-  margin-bottom: 6px;
-  padding: 8px;
-  text-align: left;
-  border: 1px solid #ccc;
-  background: white;
+.lead {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 720px;
+}
+
+.header-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.stage-indicator {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid rgba(123, 91, 46, 0.16);
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ghost-btn {
+  display: none;
+  border: 1px solid rgba(123, 91, 46, 0.25);
+  background: var(--panel);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
-#term-list button.active {
-  background: #ddd;
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
 }
 
-/* 盤 */
-.board {
-  position: relative;
-  width: 400px;
-  height: 400px;
-  background: #d8b16a;
-  margin: 20px 0;
+.sidebar,
+.card {
+  background: var(--panel);
+  border: 1px solid rgba(123, 91, 46, 0.12);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
 }
 
-/* 線 */
-.board::before {
-  content: "";
-  position: absolute;
-  inset: 20px;
-  background-image:
-    linear-gradient(#000 1px, transparent 1px),
-    linear-gradient(90deg, #000 1px, transparent 1px);
-  background-size: calc(100% / 8) calc(100% / 8);
+.sidebar {
+  position: sticky;
+  top: 16px;
+  overflow: hidden;
 }
 
-/* 交点 */
-.intersection {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  transform: translate(-50%, -50%);
+.sidebar-inner {
+  padding: 18px;
 }
 
-/* 石 */
-.stone {
+.sidebar h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.sidebar-note {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.term-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.term-item {
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  border: 1px solid rgba(123, 91, 46, 0.12);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.black {
-  background: black;
+.term-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(123, 91, 46, 0.3);
 }
 
-.white {
-  background: white;
-  border: 1px solid black;
+.term-item.active {
+  background: #efe4cb;
+  border-color: rgba(123, 91, 46, 0.4);
 }
 
-/* 赤丸 */
-.target::after {
+.term-index {
+  display: inline-block;
+  min-width: 2.4em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.content {
+  display: grid;
+  gap: 18px;
+}
+
+.card {
+  padding: 20px;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#term-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.term-description {
+  margin: 0 0 8px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.term-instruction {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.board-card {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.board {
+  display: grid;
+  gap: 0;
+  background: #d8b16c;
+  border: 2px solid #a27637;
+  border-radius: 12px;
+  padding: 12px;
+  width: fit-content;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.board-row {
+  display: contents;
+}
+
+.cell {
+  position: relative;
+  width: var(--board-cell);
+  height: var(--board-cell);
+  cursor: pointer;
+}
+
+.cell::before,
+.cell::after {
   content: "";
   position: absolute;
-  inset: 2px;
-  border: 2px solid red;
+  background: #6e4f22;
+}
+
+.cell::before {
+  left: 50%;
+  top: 0;
+  width: 1.5px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.cell::after {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  transform: translateY(-50%);
+}
+
+.cell.edge-top::before {
+  top: 50%;
+  height: 50%;
+}
+
+.cell.edge-bottom::before {
+  height: 50%;
+}
+
+.cell.edge-left::after {
+  left: 50%;
+  width: 50%;
+}
+
+.cell.edge-right::after {
+  width: 50%;
+}
+
+.cell.highlight-answer {
+  background: rgba(255, 255, 255, 0.14);
   border-radius: 50%;
+}
+
+.star-point::marker {
+  content: "";
+}
+
+.star-point-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #5c421d;
+  border-radius: 999px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.stone {
+  position: absolute;
+  width: 78%;
+  height: 78%;
+  border-radius: 999px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.18);
+}
+
+.stone.black {
+  background: radial-gradient(circle at 30% 30%, #4d4d4d 0%, #222 45%, #111 100%);
+}
+
+.stone.white {
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f0f0 55%, #d8d8d8 100%);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.stone.ghost {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  font-weight: 700;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.marker.black-text {
+  color: #111;
+}
+
+.marker.white-text {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+.message {
+  margin: 0;
+  min-height: 2.2em;
+  line-height: 1.7;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.message.success {
+  color: #1f6b2a;
+}
+
+.message.error {
+  color: #8c2d2d;
+}
+
+.controls-card {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  border: none;
+  background: var(--accent);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.controls button:hover {
+  opacity: 0.94;
+  transform: translateY(-1px);
+}
+
+.controls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#reset-btn {
+  background: #6f675a;
+}
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .site-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-status {
+    align-items: flex-start;
+  }
+
+  .ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar {
+    position: static;
+    display: none;
+  }
+
+  .sidebar.open {
+    display: block;
+  }
+
+  .board-card {
+    justify-items: center;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --board-cell: min(9.2vw, 38px);
+  }
+
+  .app {
+    width: min(100% - 16px, 1200px);
+    padding-top: 12px;
+  }
+
+  .card,
+  .sidebar-inner {
+    padding: 16px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .controls button:last-child {
+    grid-column: 1 / -1;
+  }
 }
