@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>囲碁用語を体験で学ぶ</title>
+  <title>囲碁の基本用語を体験で学ぶ</title>
   <link rel="stylesheet" href="styles.css" />
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
@@ -17,37 +17,94 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
-      <div class="topbar-left">
+    <header class="site-header">
+      <div class="site-header__inner">
         <p class="eyebrow">Interactive Go Terms</p>
-        <h1>囲碁用語を体験で学ぶ</h1>
-        <p class="subtitle">
-          図を見るだけでなく、実際に「ここに打つ」を試して囲碁用語を覚えるサイトです。
+        <h1>囲碁の基本用語を体験で学ぶ</h1>
+        <p class="site-lead">
+          このサイトは、囲碁の基本用語を「読むだけ」でなく、
+          実際に盤面を見ながら体験して覚えるための学習サイトです。
         </p>
       </div>
     </header>
 
-   <main>
+    <main class="layout">
+      <aside class="sidebar panel">
+        <section class="intro-card">
+          <h2>このサイトについて</h2>
+          <p>
+            収録しているのは、キリ、ツギ、ハネ、オサエ、マガリ、
+            一間、ワタリ、ノゾキ、ツケ、トビ、ブツカリ、オシ、
+            ハイ、ヒキ、ノビ、カカエ、サガリ、コスミ、ヒラキの19語です。
+          </p>
+          <p>
+            左の一覧から用語を選ぶか、下の「前へ」「次へ」で進んでください。
+            赤い丸は、この用語を体験するための一手の位置です。
+          </p>
+        </section>
 
-    <div class="left">
-      <h2 id="title"></h2>
-      <p id="desc"></p>
+        <section class="list-card">
+          <div class="list-card__top">
+            <h2>19の基本囲碁用語</h2>
+            <p id="stage-indicator" class="stage-indicator"></p>
+          </div>
 
-      <div id="board" class="board"></div>
+          <label class="search-label" for="search">用語検索</label>
+          <input
+            id="search"
+            class="search-input"
+            type="text"
+            placeholder="例：キリ、ツギ、トビ"
+            autocomplete="off"
+          />
 
-      <p id="hint" class="hint"></p>
+          <div id="term-list" class="term-list" aria-label="囲碁用語一覧"></div>
+        </section>
+      </aside>
 
-      <div class="controls">
-        <button id="prev">← 前へ</button>
-        <button id="reset">リトライ</button>
-        <button id="next">次へ →</button>
-      </div>
-    </div>
+      <section class="content panel">
+        <div class="content-head">
+          <div>
+            <p class="content-kicker">用語の体験</p>
+            <h2 id="term-title">用語を選択</h2>
+          </div>
+        </div>
 
-  </main>
+        <section class="description-card">
+          <h3>説明</h3>
+          <p id="term-description">
+            左の一覧から用語を選んでください。
+          </p>
+        </section>
+
+        <section class="board-card">
+          <div class="board-card__head">
+            <div>
+              <h3>ミニ盤面</h3>
+              <p>赤い丸の位置を考えて打ってみましょう</p>
+            </div>
+          </div>
+
+          <div class="board-wrap">
+            <div id="board" class="board" aria-label="9路盤"></div>
+          </div>
+        </section>
+
+        <section class="hint-card">
+          <h3>メッセージ</h3>
+          <p id="message" class="message"></p>
+        </section>
+
+        <section class="controls">
+          <button id="prev-btn" type="button" class="secondary-btn">← 前へ</button>
+          <button id="reset-btn" type="button" class="secondary-btn">リセット</button>
+          <button id="next-btn" type="button" class="primary-btn">次へ →</button>
+        </section>
+      </section>
+    </main>
   </div>
 
   <script src="stages.js"></script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
