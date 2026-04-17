@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>囲碁ルール学習ゲーム</title>
-    <link rel="stylesheet" href="styles.css" />
-    <!-- Google tag (gtag.js) -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>囲碁用語 体験サイト</title>
+  <link rel="stylesheet" href="styles.css"/>
+   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -14,78 +14,30 @@
 
   gtag('config', 'G-1BF9HSHYEM');
 </script>
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Go Rule Learning Game</p>
-          <h1>囲碁ルール学習ゲーム</h1>
-        </div>
-        <div class="topbar-right">
-          <div class="stage-chip">
-            <span>Stage</span>
-            <strong id="stage-number">1 / 10</strong>
-          </div>
-          <button id="reset-progress-btn" class="ghost-btn" type="button">進行リセット</button>
-        </div>
-      </header>
+</head>
+<body>
 
-      <main class="layout">
-        <section class="panel board-panel">
-          <div class="stage-heading">
-            <h2 id="stage-title">ステージタイトル</h2>
-            <p id="stage-subtitle">このステージで学ぶこと</p>
-          </div>
+<header>
+  <h1>囲碁用語を体験で学ぶ</h1>
+  <input id="search" placeholder="用語検索..." />
+</header>
 
-          <div class="board-wrap">
-            <div id="board" class="board" aria-label="5路盤"></div>
-          </div>
+<main>
+  <aside id="list"></aside>
 
-          <div class="legend">
-            <span><i class="dot liberty"></i> 呼吸点ヒント</span>
-            <span><i class="dot capture"></i> 取れる石</span>
-            <span><i class="dot target"></i> 目標地点</span>
-          </div>
-        </section>
+  <section id="detail">
+    <h2 id="title">用語を選択</h2>
+    <p id="desc"></p>
 
-        <aside class="panel side-panel">
-          <section class="card">
-            <h3>説明</h3>
-            <p id="stage-description"></p>
-          </section>
+    <div id="board" class="board"></div>
 
-          <section class="card">
-            <h3>メッセージ</h3>
-            <p id="message" class="message">交点をクリックして石を置いてみましょう。</p>
-          </section>
+    <p id="hint"></p>
 
-          <section class="card toggles">
-            <label>
-              <input type="checkbox" id="hint-toggle" checked />
-              呼吸点ヒントを表示
-            </label>
-            <label>
-              <input type="checkbox" id="coord-toggle" />
-              座標を表示
-            </label>
-          </section>
+    <button id="reset">リセット</button>
+  </section>
+</main>
 
-          <section class="card objective-card">
-            <h3>クリア条件</h3>
-            <p id="objective"></p>
-          </section>
-
-          <section class="actions">
-            <button id="retry-btn" type="button">リトライ</button>
-            <button id="prev-btn" class="ghost-btn" type="button">前へ</button>
-            <button id="next-btn" type="button" disabled>次へ</button>
-          </section>
-        </aside>
-      </main>
-    </div>
-
-    <script src="stages.js"></script>
-    <script src="game.js"></script>
-  </body>
+<script src="terms.js"></script>
+<script src="app.js"></script>
+</body>
 </html>
