@@ -1,305 +1,344 @@
-window.STAGES = [
-  {
-    id: 1,
-    title: "キリ",
-    description: "黒はつながっています。白はどこに打てば黒を分断できるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 0, 1, 0],
-      [0, 1, 0, 1, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 2 },
-    success: "キリです。黒のつながりを断ちました。",
-  },
+(() => {
+  const BOARD_SIZE = 9;
+  const EMPTY = 0;
+  const BLACK = 1;
+  const WHITE = 2;
 
-  {
-    id: 2,
-    title: "ツギ",
-    description: "白に切られそうです。黒はどこに打てばつながるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 2, 1, 0],
-      [0, 1, 0, 1, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 2 },
-    success: "ツギです。黒石がしっかりつながりました。",
-  },
+  const STAR_POINTS_9 = [
+    { x: 2, y: 2 },
+    { x: 6, y: 2 },
+    { x: 4, y: 4 },
+    { x: 2, y: 6 },
+    { x: 6, y: 6 }
+  ];
 
-  {
-    id: 3,
-    title: "ハネ",
-    description: "相手の石の外側に沿って曲がる手はどこでしょうか？ 白で打ってみましょう。",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "ハネです。相手の石に沿って曲がりました。",
-  },
+  const boardEl = document.getElementById("board");
+  const titleEl = document.getElementById("term-title");
+  const descEl = document.getElementById("term-description");
+  const messageEl = document.getElementById("message");
+  const listEl = document.getElementById("term-list");
+  const searchEl = document.getElementById("search");
+  const stageIndicatorEl = document.getElementById("stage-indicator");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const resetBtn = document.getElementById("reset-btn");
 
-  {
-    id: 4,
-    title: "オサエ",
-    description: "白が出てきそうです。黒はどこに打てば進行を止められるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 1 },
-    success: "オサエです。相手の進行を止めました。",
-  },
+  if (
+    !boardEl ||
+    !titleEl ||
+    !descEl ||
+    !messageEl ||
+    !listEl ||
+    !searchEl ||
+    !stageIndicatorEl ||
+    !prevBtn ||
+    !nextBtn ||
+    !resetBtn
+  ) {
+    console.error("必要なHTML要素が見つかりません。index.html を確認してください。");
+    return;
+  }
 
-  {
-    id: 5,
-    title: "マガリ",
-    description: "黒の形を直角にしっかり曲げるには、どこに打てばよいでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 2 },
-    success: "マガリです。直角のしっかりした形になりました。",
-  },
+  if (!window.STAGES || !Array.isArray(window.STAGES) || window.STAGES.length === 0) {
+    console.error("stages.js の読み込みに失敗しています。");
+    titleEl.textContent = "データ読み込みエラー";
+    descEl.textContent = "stages.js が正しく読み込まれていません。";
+    messageEl.textContent = "";
+    return;
+  }
 
-  {
-    id: 6,
-    title: "一間",
-    description: "白石から1つあけて打つ『一間』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "一間です。1つ空点をあけた形になりました。",
-  },
+  let currentIndex = 0;
+  let currentStage = null;
+  let currentBoard = null;
+  let currentTarget = null;
+  let solved = false;
 
-  {
-    id: 7,
-    title: "ワタリ",
-    description: "辺を使って白石どうしを連絡したいです。どこに打てばワタリになるでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [2, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 3 },
-    success: "ワタリです。辺を使って石が連絡しました。",
-  },
+  function cloneBoard(board) {
+    return board.map((row) => [...row]);
+  }
 
-  {
-    id: 8,
-    title: "ノゾキ",
-    description: "黒のつながりをのぞくには、白はどこに打てばよいでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 0, 1, 0],
-      [0, 0, 2, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "ノゾキです。黒はツガないと切られる形になりました。",
-  },
+  function makeEmptyBoard(size) {
+    return Array.from({ length: size }, () => Array(size).fill(EMPTY));
+  }
 
-  {
-    id: 9,
-    title: "ツケ",
-    description: "単独で相手の石にくっつく手はどこでしょうか？ 白で打ってみましょう。",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "ツケです。相手の石に直接くっつきました。",
-  },
+  function isValidBoard(board) {
+    return (
+      Array.isArray(board) &&
+      board.length > 0 &&
+      board.every(
+        (row) =>
+          Array.isArray(row) &&
+          row.length === board.length &&
+          row.every((cell) => [EMPTY, BLACK, WHITE].includes(cell))
+      )
+    );
+  }
 
-  {
-    id: 10,
-    title: "トビ",
-    description: "白石から少し離れて進む『トビ』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "トビです。少し離れて前へ進みました。",
-  },
+  function normalizeBoard(board) {
+    const originalSize = board.length;
 
-  {
-    id: 11,
-    title: "ブツカリ",
-    description: "相手に正面からぶつかる白の手はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 2 },
-    success: "ブツカリです。相手に正面からぶつかりました。",
-  },
+    if (originalSize === BOARD_SIZE) {
+      return cloneBoard(board);
+    }
 
-  {
-    id: 12,
-    title: "オシ",
-    description: "白で相手を押しつける手はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "オシです。相手を圧迫する形になりました。",
-  },
+    if (originalSize > BOARD_SIZE) {
+      throw new Error(`盤面サイズ ${originalSize} は ${BOARD_SIZE} 路より大きいため表示できません。`);
+    }
 
-  {
-    id: 13,
-    title: "ハイ",
-    description: "低い位置をはうように進む黒の手はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [1, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 3 },
-    success: "ハイです。低い線をはうように進みました。",
-  },
+    const newBoard = makeEmptyBoard(BOARD_SIZE);
+    const offset = Math.floor((BOARD_SIZE - originalSize) / 2);
 
-  {
-    id: 14,
-    title: "ヒキ",
-    description: "黒は自分の方へ引いて形を整えたいです。どこに打てばヒキでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 0, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 1, y: 1 },
-    success: "ヒキです。自分の石の方へ引いて形を整えました。",
-  },
+    for (let y = 0; y < originalSize; y += 1) {
+      for (let x = 0; x < originalSize; x += 1) {
+        newBoard[y + offset][x + offset] = board[y][x];
+      }
+    }
 
-  {
-    id: 15,
-    title: "ノビ",
-    description: "黒石を外側へまっすぐ伸ばすには、どこに打てばよいでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 1, y: 3 },
-    success: "ノビです。外へ向かって伸びる形になりました。",
-  },
+    return newBoard;
+  }
 
-  {
-    id: 16,
-    title: "カカエ",
-    description: "白で黒石の逃げ道をふさぐ『カカエ』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 1, 2, 0, 0],
-      [0, 2, 1, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 2, y: 1 },
-    success: "カカエです。黒石の逃げ道をふさぎました。",
-  },
+  function normalizePoint(point, originalSize) {
+    if (!point) return null;
+    const offset = Math.floor((BOARD_SIZE - originalSize) / 2);
+    return {
+      x: point.x + offset,
+      y: point.y + offset
+    };
+  }
 
-  {
-    id: 17,
-    title: "サガリ",
-    description: "白石を盤端へ向かって下げる『サガリ』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 1, y: 2 },
-    success: "サガリです。辺へ向かって低く安定させました。",
-  },
+  function clearChildren(el) {
+    while (el.firstChild) {
+      el.removeChild(el.firstChild);
+    }
+  }
 
-  {
-    id: 18,
-    title: "コスミ",
-    description: "黒石から斜めに打つ『コスミ』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 1,
-    correct: { x: 2, y: 2 },
-    success: "コスミです。斜めのやわらかい形になりました。",
-  },
+  function setMessage(text, kind = "") {
+    messageEl.textContent = text || "";
+    messageEl.className = "message";
+    if (kind) {
+      messageEl.classList.add(kind);
+    }
+  }
 
-  {
-    id: 19,
-    title: "ヒラキ",
-    description: "白石を辺へ広く展開する『ヒラキ』はどこでしょうか？",
-    board: [
-      [0, 0, 0, 0, 0],
-      [0, 2, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ],
-    moveColor: 2,
-    correct: { x: 3, y: 1 },
-    success: "ヒラキです。辺へ向かって広く展開しました。",
-  },
-];
+  function getStoneClass(value) {
+    if (value === BLACK) return "black";
+    if (value === WHITE) return "white";
+    return "";
+  }
+
+  function getFilteredStages(keyword) {
+    const q = keyword.trim();
+    if (!q) return window.STAGES;
+
+    return window.STAGES.filter((stage) => {
+      const haystack = `${stage.title} ${stage.short || ""} ${stage.description || ""}`;
+      return haystack.includes(q);
+    });
+  }
+
+  function renderList(keyword = "") {
+    clearChildren(listEl);
+
+    const filtered = getFilteredStages(keyword);
+
+    if (filtered.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "term-item empty";
+      empty.textContent = "該当する用語がありません";
+      listEl.appendChild(empty);
+      return;
+    }
+
+    filtered.forEach((stage) => {
+      const originalIndex = window.STAGES.findIndex((s) => s.id === stage.id);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "term-item";
+
+      if (originalIndex === currentIndex) {
+        btn.classList.add("active");
+      }
+
+      const title = document.createElement("div");
+      title.className = "term-item__title";
+      title.textContent = `${String(originalIndex + 1).padStart(2, "0")} ${stage.title}`;
+
+      const short = document.createElement("div");
+      short.className = "term-item__short";
+      short.textContent = stage.short || "";
+
+      btn.appendChild(title);
+      btn.appendChild(short);
+
+      btn.addEventListener("click", () => {
+        loadStage(originalIndex);
+        renderList(searchEl.value);
+      });
+
+      listEl.appendChild(btn);
+    });
+  }
+
+  function addGridLines() {
+    for (let i = 0; i < BOARD_SIZE; i += 1) {
+      const v = document.createElement("div");
+      v.className = "grid-line vertical";
+      v.style.left = `calc(24px + ${i} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      boardEl.appendChild(v);
+
+      const h = document.createElement("div");
+      h.className = "grid-line horizontal";
+      h.style.top = `calc(24px + ${i} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      boardEl.appendChild(h);
+    }
+  }
+
+  function addStarPoints() {
+    STAR_POINTS_9.forEach((point) => {
+      const star = document.createElement("div");
+      star.className = "star-point";
+      star.style.left = `calc(24px + ${point.x} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      star.style.top = `calc(24px + ${point.y} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      boardEl.appendChild(star);
+    });
+  }
+
+  function onIntersectionClick(x, y) {
+    if (!currentStage || !currentBoard || solved) return;
+
+    if (currentBoard[y][x] !== EMPTY) {
+      setMessage("その交点にはすでに石があります。", "error");
+      return;
+    }
+
+    const isCorrect =
+      currentTarget &&
+      x === currentTarget.x &&
+      y === currentTarget.y;
+
+    if (!isCorrect) {
+      setMessage("そこではありません。赤い丸の位置をよく見て、もう一度考えてみましょう。", "error");
+      return;
+    }
+
+    currentBoard[y][x] = currentStage.moveColor || BLACK;
+    solved = true;
+    drawBoard();
+    setMessage(currentStage.success || "正解です。", "success");
+    updateNavButtons();
+  }
+
+  function createIntersection(x, y) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "intersection";
+    btn.style.left = `calc(24px + ${x} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+    btn.style.top = `calc(24px + ${y} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+
+    if (
+      currentTarget &&
+      currentTarget.x === x &&
+      currentTarget.y === y &&
+      !solved &&
+      currentBoard[y][x] === EMPTY
+    ) {
+      btn.classList.add("target");
+    }
+
+    const value = currentBoard[y][x];
+    if (value !== EMPTY) {
+      const stone = document.createElement("div");
+      stone.className = `stone ${getStoneClass(value)}`;
+      btn.appendChild(stone);
+    }
+
+    btn.addEventListener("click", () => onIntersectionClick(x, y));
+    return btn;
+  }
+
+  function drawBoard() {
+    clearChildren(boardEl);
+    addGridLines();
+    addStarPoints();
+
+    for (let y = 0; y < BOARD_SIZE; y += 1) {
+      for (let x = 0; x < BOARD_SIZE; x += 1) {
+        boardEl.appendChild(createIntersection(x, y));
+      }
+    }
+  }
+
+  function updateNavButtons() {
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === window.STAGES.length - 1;
+  }
+
+  function loadStage(index) {
+    const stage = window.STAGES[index];
+    if (!stage) return;
+
+    if (!isValidBoard(stage.board)) {
+      console.error("盤面データが不正です:", stage);
+      titleEl.textContent = stage.title || "盤面エラー";
+      descEl.textContent = "この用語の盤面データが正しくありません。";
+      setMessage("");
+      clearChildren(boardEl);
+      currentStage = null;
+      currentBoard = null;
+      currentTarget = null;
+      solved = false;
+      return;
+    }
+
+    currentIndex = index;
+    currentStage = stage;
+    currentBoard = normalizeBoard(stage.board);
+    currentTarget = normalizePoint(stage.correct, stage.board.length);
+    solved = false;
+
+    titleEl.textContent = stage.title || "";
+    descEl.textContent = stage.description || "";
+    stageIndicatorEl.textContent = `${currentIndex + 1} / ${window.STAGES.length}`;
+    setMessage("赤い丸の位置に打って、この用語を体験してみましょう。");
+
+    drawBoard();
+    updateNavButtons();
+  }
+
+  function goPrev() {
+    if (currentIndex <= 0) return;
+    loadStage(currentIndex - 1);
+    renderList(searchEl.value);
+  }
+
+  function goNext() {
+    if (currentIndex >= window.STAGES.length - 1) return;
+    loadStage(currentIndex + 1);
+    renderList(searchEl.value);
+  }
+
+  function resetCurrent() {
+    loadStage(currentIndex);
+    renderList(searchEl.value);
+  }
+
+  function initEvents() {
+    searchEl.addEventListener("input", (e) => {
+      renderList(e.target.value);
+    });
+
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+    resetBtn.addEventListener("click", resetCurrent);
+  }
+
+  function init() {
+    initEvents();
+    renderList("");
+    loadStage(0);
+    renderList("");
+  }
+
+  init();
+})();
