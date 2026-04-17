@@ -12,6 +12,7 @@
   --board: #d8b16a;
   --board-line: #6c4c1f;
   --target: #d9372a;
+  --star: #4d3314;
 }
 
 * {
@@ -261,7 +262,7 @@ input {
 
 .board {
   position: relative;
-  width: min(460px, 100%);
+  width: min(560px, 100%);
   aspect-ratio: 1 / 1;
   background: var(--board);
   border-radius: 16px;
@@ -274,27 +275,36 @@ input {
 .grid-line {
   position: absolute;
   background: var(--board-line);
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .grid-line.vertical {
-  top: 20px;
-  bottom: 20px;
+  top: 24px;
+  bottom: 24px;
   width: 2px;
   transform: translateX(-50%);
 }
 
 .grid-line.horizontal {
-  left: 20px;
-  right: 20px;
+  left: 24px;
+  right: 24px;
   height: 2px;
   transform: translateY(-50%);
 }
 
+.star-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--star);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .intersection {
   position: absolute;
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
   transform: translate(-50%, -50%);
   border: none;
   background: transparent;
@@ -310,18 +320,18 @@ input {
 .intersection.target::after {
   content: "";
   position: absolute;
-  inset: 4px;
+  inset: 2px;
   border-radius: 50%;
   border: 2px solid var(--target);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.28);
 }
 
 .stone {
   position: absolute;
-  inset: 3px;
+  inset: 2px;
   border-radius: 50%;
   box-shadow:
-    0 3px 6px rgba(0,0,0,0.28),
+    0 2px 5px rgba(0,0,0,0.26),
     inset 0 1px 2px rgba(255,255,255,0.12);
 }
 
@@ -387,7 +397,11 @@ input {
   }
 
   .intersection {
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .stone {
+    inset: 2px;
   }
 }
