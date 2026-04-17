@@ -4,6 +4,14 @@
   const BLACK = 1;
   const WHITE = 2;
 
+  const STAR_POINTS_9 = [
+    { x: 2, y: 2 },
+    { x: 6, y: 2 },
+    { x: 4, y: 4 },
+    { x: 2, y: 6 },
+    { x: 6, y: 6 },
+  ];
+
   const listEl = document.getElementById("list");
   const boardEl = document.getElementById("board");
   const titleEl = document.getElementById("title");
@@ -36,23 +44,60 @@
   let currentIndex = 0;
   let currentTerm = null;
   let currentBoard = null;
+  let currentTarget = null;
   let solved = false;
 
   function cloneBoard(board) {
     return board.map((row) => [...row]);
   }
 
+  function makeEmptyBoard(size) {
+    return Array.from({ length: size }, () => Array(size).fill(EMPTY));
+  }
+
   function isValidBoard(board) {
     return (
       Array.isArray(board) &&
-      board.length === BOARD_SIZE &&
+      board.length > 0 &&
       board.every(
         (row) =>
           Array.isArray(row) &&
-          row.length === BOARD_SIZE &&
+          row.length === board.length &&
           row.every((cell) => [EMPTY, BLACK, WHITE].includes(cell))
       )
     );
+  }
+
+  function normalizeBoard(board) {
+    const originalSize = board.length;
+
+    if (originalSize === BOARD_SIZE) {
+      return cloneBoard(board);
+    }
+
+    if (originalSize > BOARD_SIZE) {
+      throw new Error(`盤面サイズ ${originalSize} は ${BOARD_SIZE} 路より大きいため表示できません。`);
+    }
+
+    const newBoard = makeEmptyBoard(BOARD_SIZE);
+    const offset = Math.floor((BOARD_SIZE - originalSize) / 2);
+
+    for (let y = 0; y < originalSize; y += 1) {
+      for (let x = 0; x < originalSize; x += 1) {
+        newBoard[y + offset][x + offset] = board[y][x];
+      }
+    }
+
+    return newBoard;
+  }
+
+  function normalizeTarget(target, originalSize) {
+    if (!target) return null;
+    const offset = Math.floor((BOARD_SIZE - originalSize) / 2);
+    return {
+      x: target.x + offset,
+      y: target.y + offset,
+    };
   }
 
   function getStoneClass(value) {
@@ -121,32 +166,41 @@
     });
   }
 
-  function renderBoardGrid() {
+  function addGridLines() {
     for (let i = 0; i < BOARD_SIZE; i += 1) {
       const v = document.createElement("div");
       v.className = "grid-line vertical";
-      v.style.left = `calc(20px + ${i} * ((100% - 40px) / ${BOARD_SIZE - 1}))`;
+      v.style.left = `calc(24px + ${i} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
       boardEl.appendChild(v);
 
       const h = document.createElement("div");
       h.className = "grid-line horizontal";
-      h.style.top = `calc(20px + ${i} * ((100% - 40px) / ${BOARD_SIZE - 1}))`;
+      h.style.top = `calc(24px + ${i} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
       boardEl.appendChild(h);
     }
+  }
+
+  function addStarPoints() {
+    STAR_POINTS_9.forEach((point) => {
+      const star = document.createElement("div");
+      star.className = "star-point";
+      star.style.left = `calc(24px + ${point.x} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      star.style.top = `calc(24px + ${point.y} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+      boardEl.appendChild(star);
+    });
   }
 
   function createIntersection(x, y) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "intersection";
-    btn.style.left = `calc(20px + ${x} * ((100% - 40px) / ${BOARD_SIZE - 1}))`;
-    btn.style.top = `calc(20px + ${y} * ((100% - 40px) / ${BOARD_SIZE - 1}))`;
+    btn.style.left = `calc(24px + ${x} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
+    btn.style.top = `calc(24px + ${y} * ((100% - 48px) / ${BOARD_SIZE - 1}))`;
 
     if (
-      currentTerm &&
-      currentTerm.target &&
-      currentTerm.target.x === x &&
-      currentTerm.target.y === y &&
+      currentTarget &&
+      currentTarget.x === x &&
+      currentTarget.y === y &&
       !solved &&
       currentBoard[y][x] === EMPTY
     ) {
@@ -166,7 +220,8 @@
 
   function drawBoard() {
     clearChildren(boardEl);
-    renderBoardGrid();
+    addGridLines();
+    addStarPoints();
 
     for (let y = 0; y < BOARD_SIZE; y += 1) {
       for (let x = 0; x < BOARD_SIZE; x += 1) {
@@ -195,13 +250,15 @@
       clearChildren(boardEl);
       currentTerm = null;
       currentBoard = null;
+      currentTarget = null;
       solved = false;
       return;
     }
 
     currentIndex = index;
     currentTerm = term;
-    currentBoard = cloneBoard(term.board);
+    currentBoard = normalizeBoard(term.board);
+    currentTarget = normalizeTarget(term.target, term.board.length);
     solved = false;
 
     titleEl.textContent = term.title || "";
@@ -220,9 +277,9 @@
     }
 
     const isCorrect =
-      currentTerm.target &&
-      x === currentTerm.target.x &&
-      y === currentTerm.target.y;
+      currentTarget &&
+      x === currentTarget.x &&
+      y === currentTarget.y;
 
     if (!isCorrect) {
       setHint("そこではありません。赤い目標地点に打ってみましょう。", "error");
@@ -237,7 +294,8 @@
 
   function resetCurrentTerm() {
     if (!currentTerm) return;
-    currentBoard = cloneBoard(currentTerm.board);
+    currentBoard = normalizeBoard(currentTerm.board);
+    currentTarget = normalizeTarget(currentTerm.target, currentTerm.board.length);
     solved = false;
     drawBoard();
     setHint(currentTerm.hint || "");
