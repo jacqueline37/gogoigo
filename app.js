@@ -1,5 +1,5 @@
 (() => {
-  const BOARD_SIZE = 5;
+  const BOARD_SIZE = 9;
   const EMPTY = 0;
   const BLACK = 1;
   const WHITE = 2;
