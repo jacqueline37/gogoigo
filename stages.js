@@ -13,7 +13,11 @@ window.STAGES = [
       { x: 3, y: 3, color: "black" },
       { x: 5, y: 3, color: "black" },
       { x: 4, y: 2, color: "white" },
-      { x: 4, y: 4, color: "white" }
+      { x: 4, y: 4, color: "white" },
+      { x: 2, y: 3, color: "black" },
+      { x: 6, y: 3, color: "black" },
+      { x: 3, y: 2, color: "white" },
+      { x: 5, y: 4, color: "white" }
     ]
   },
   {
@@ -29,7 +33,11 @@ window.STAGES = [
     stones: [
       { x: 3, y: 3, color: "black" },
       { x: 5, y: 3, color: "black" },
-      { x: 4, y: 2, color: "white" }
+      { x: 4, y: 2, color: "white" },
+      { x: 2, y: 3, color: "black" },
+      { x: 6, y: 3, color: "black" },
+      { x: 3, y: 2, color: "white" },
+      { x: 5, y: 2, color: "white" }
     ]
   },
   {
@@ -44,7 +52,10 @@ window.STAGES = [
     failureMessage: "ハネは、相手の石の横を曲がる感じの手です。",
     stones: [
       { x: 4, y: 3, color: "black" },
-      { x: 3, y: 3, color: "white" }
+      { x: 3, y: 3, color: "white" },
+      { x: 4, y: 4, color: "black" },
+      { x: 3, y: 4, color: "white" },
+      { x: 5, y: 3, color: "black" }
     ]
   },
   {
@@ -59,7 +70,10 @@ window.STAGES = [
     failureMessage: "相手の進みたい方向を止める位置を探しましょう。",
     stones: [
       { x: 4, y: 3, color: "white" },
-      { x: 3, y: 3, color: "black" }
+      { x: 3, y: 3, color: "black" },
+      { x: 5, y: 3, color: "black" },
+      { x: 4, y: 4, color: "white" },
+      { x: 3, y: 4, color: "black" }
     ]
   },
   {
@@ -74,7 +88,10 @@ window.STAGES = [
     failureMessage: "マガリは、今ある黒石から直角方向に曲がる手です。",
     stones: [
       { x: 3, y: 3, color: "black" },
-      { x: 4, y: 3, color: "black" }
+      { x: 4, y: 3, color: "black" },
+      { x: 2, y: 3, color: "black" },
+      { x: 3, y: 2, color: "white" },
+      { x: 5, y: 3, color: "white" }
     ]
   },
   {
@@ -88,7 +105,10 @@ window.STAGES = [
     successMessage: "正解です。一路あけて打つ形が一間です。",
     failureMessage: "一間は、石との間にちょうど1つの交点があく形です。",
     stones: [
-      { x: 3, y: 4, color: "white" }
+      { x: 3, y: 4, color: "white" },
+      { x: 2, y: 4, color: "black" },
+      { x: 3, y: 3, color: "white" },
+      { x: 3, y: 5, color: "black" }
     ]
   },
   {
@@ -104,7 +124,10 @@ window.STAGES = [
     stones: [
       { x: 3, y: 6, color: "white" },
       { x: 5, y: 6, color: "white" },
-      { x: 4, y: 6, color: "black" }
+      { x: 4, y: 6, color: "black" },
+      { x: 3, y: 7, color: "black" },
+      { x: 5, y: 7, color: "black" },
+      { x: 2, y: 6, color: "white" }
     ]
   },
   {
@@ -121,7 +144,9 @@ window.STAGES = [
       { x: 3, y: 3, color: "black" },
       { x: 4, y: 3, color: "black" },
       { x: 5, y: 3, color: "white" },
-      { x: 2, y: 3, color: "white" }
+      { x: 2, y: 3, color: "white" },
+      { x: 3, y: 4, color: "black" },
+      { x: 4, y: 4, color: "white" }
     ]
   },
   {
@@ -135,7 +160,10 @@ window.STAGES = [
     successMessage: "正解です。相手の石にぴったり接する手がツケです。",
     failureMessage: "ツケは、相手の石に直接くっつく手です。",
     stones: [
-      { x: 4, y: 4, color: "black" }
+      { x: 4, y: 4, color: "black" },
+      { x: 4, y: 3, color: "white" },
+      { x: 3, y: 4, color: "white" },
+      { x: 5, y: 3, color: "black" }
     ]
   },
   {
@@ -149,7 +177,10 @@ window.STAGES = [
     successMessage: "正解です。軽く前に出る基本形が一間トビです。",
     failureMessage: "トビは、くっつくのではなく1つ飛んで進むイメージです。",
     stones: [
-      { x: 3, y: 4, color: "white" }
+      { x: 3, y: 4, color: "white" },
+      { x: 2, y: 4, color: "black" },
+      { x: 3, y: 3, color: "white" },
+      { x: 4, y: 3, color: "black" }
     ]
   },
   {
@@ -164,7 +195,10 @@ window.STAGES = [
     failureMessage: "ブツカリは、相手の進路にぶつかる感覚の手です。",
     stones: [
       { x: 4, y: 4, color: "black" },
-      { x: 3, y: 4, color: "white" }
+      { x: 3, y: 4, color: "white" },
+      { x: 5, y: 4, color: "black" },
+      { x: 3, y: 5, color: "white" },
+      { x: 5, y: 5, color: "black" }
     ]
   },
   {
@@ -179,7 +213,10 @@ window.STAGES = [
     failureMessage: "相手の石を外から押しつける位置を探してみましょう。",
     stones: [
       { x: 4, y: 3, color: "black" },
-      { x: 3, y: 3, color: "white" }
+      { x: 3, y: 3, color: "white" },
+      { x: 4, y: 4, color: "black" },
+      { x: 3, y: 4, color: "white" },
+      { x: 5, y: 3, color: "black" }
     ]
   },
   {
@@ -194,7 +231,10 @@ window.STAGES = [
     failureMessage: "ハイは、辺に沿って低く進む手です。",
     stones: [
       { x: 3, y: 7, color: "black" },
-      { x: 3, y: 6, color: "white" }
+      { x: 3, y: 6, color: "white" },
+      { x: 2, y: 7, color: "black" },
+      { x: 4, y: 6, color: "white" },
+      { x: 2, y: 6, color: "black" }
     ]
   },
   {
@@ -210,7 +250,9 @@ window.STAGES = [
     stones: [
       { x: 4, y: 4, color: "black" },
       { x: 5, y: 4, color: "white" },
-      { x: 5, y: 3, color: "black" }
+      { x: 5, y: 3, color: "black" },
+      { x: 4, y: 3, color: "white" },
+      { x: 6, y: 4, color: "black" }
     ]
   },
   {
@@ -225,7 +267,10 @@ window.STAGES = [
     failureMessage: "ノビは、後ろに引くのでなく外側へ伸びる手です。",
     stones: [
       { x: 4, y: 4, color: "black" },
-      { x: 4, y: 3, color: "white" }
+      { x: 4, y: 3, color: "white" },
+      { x: 3, y: 4, color: "black" },
+      { x: 3, y: 3, color: "white" },
+      { x: 4, y: 5, color: "black" }
     ]
   },
   {
@@ -242,7 +287,9 @@ window.STAGES = [
       { x: 4, y: 4, color: "white" },
       { x: 4, y: 3, color: "black" },
       { x: 3, y: 4, color: "black" },
-      { x: 4, y: 5, color: "black" }
+      { x: 4, y: 5, color: "black" },
+      { x: 3, y: 3, color: "black" },
+      { x: 3, y: 5, color: "white" }
     ]
   },
   {
@@ -256,7 +303,10 @@ window.STAGES = [
     successMessage: "正解です。ひとつ下がって形を安定させるのがサガリです。",
     failureMessage: "サガリは、上に伸びるのでなく一段低く下がる手です。",
     stones: [
-      { x: 4, y: 6, color: "white" }
+      { x: 4, y: 6, color: "white" },
+      { x: 3, y: 6, color: "black" },
+      { x: 5, y: 6, color: "black" },
+      { x: 3, y: 7, color: "white" }
     ]
   },
   {
@@ -270,7 +320,10 @@ window.STAGES = [
     successMessage: "正解です。斜めに一つずれる手がコスミです。",
     failureMessage: "コスミは、縦横ではなく斜めの連絡です。",
     stones: [
-      { x: 3, y: 3, color: "white" }
+      { x: 3, y: 3, color: "white" },
+      { x: 2, y: 3, color: "black" },
+      { x: 3, y: 2, color: "white" },
+      { x: 4, y: 3, color: "black" }
     ]
   },
   {
@@ -284,7 +337,11 @@ window.STAGES = [
     successMessage: "正解です。勢力や地を広げるように開く手がヒラキです。",
     failureMessage: "ヒラキは、くっつくのではなく少し大きめに間をあける手です。",
     stones: [
-      { x: 2, y: 7, color: "white" }
+      { x: 2, y: 7, color: "white" },
+      { x: 2, y: 6, color: "black" },
+      { x: 3, y: 7, color: "white" },
+      { x: 3, y: 6, color: "black" },
+      { x: 1, y: 7, color: "white" }
     ]
   }
 ];
