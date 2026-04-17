@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>囲碁の基本用語を体験で学ぶ</title>
   <link rel="stylesheet" href="styles.css" />
+
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
 <script>
@@ -16,43 +17,60 @@
 </script>
 </head>
 <body>
-
-<div class="app">
-
-  <header>
-    <h1>囲碁の基本用語（体験版）</h1>
-    <p id="stage-indicator"></p>
-  </header>
-
-  <main class="layout">
-
-    <!-- 左：一覧 -->
-    <aside class="sidebar">
-      <h2>19の基本用語</h2>
-      <div id="term-list"></div>
-    </aside>
-
-    <!-- 右：内容 -->
-    <section class="content">
-      <h2 id="term-title"></h2>
-      <p id="term-description"></p>
-
-      <div id="board" class="board"></div>
-
-      <p id="message"></p>
-
-      <div class="controls">
-        <button id="prev-btn">← 前へ</button>
-        <button id="reset-btn">リセット</button>
-        <button id="next-btn">次へ →</button>
+  <div class="app">
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Interactive Go Terms</p>
+        <h1>囲碁の基本用語を体験で学ぶ</h1>
+        <p class="lead">
+          左の一覧から用語を選び、盤面をクリックして「この手かな？」を試しながら覚えるサイトです。
+        </p>
       </div>
-    </section>
 
-  </main>
+      <div class="header-status">
+        <p id="stage-indicator" class="stage-indicator">第1問 / 19</p>
+        <button id="toggle-sidebar-btn" class="ghost-btn" type="button" aria-expanded="false">
+          用語一覧を開く
+        </button>
+      </div>
+    </header>
 
-</div>
+    <main class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+          <h2>19の基本用語</h2>
+          <p class="sidebar-note">
+            用語を選ぶと、その用語の短い説明と例題が表示されます。
+          </p>
+          <div id="term-list" class="term-list"></div>
+        </div>
+      </aside>
 
-<script src="stages.js"></script>
-<script src="app.js"></script>
+      <section class="content">
+        <div class="card intro-card">
+          <p class="section-label">用語の説明</p>
+          <h2 id="term-title">読み込み中...</h2>
+          <p id="term-description" class="term-description"></p>
+          <p id="term-instruction" class="term-instruction"></p>
+        </div>
+
+        <div class="card board-card">
+          <div id="board" class="board" aria-label="囲碁盤"></div>
+          <p id="message" class="message" aria-live="polite"></p>
+        </div>
+
+        <div class="card controls-card">
+          <div class="controls">
+            <button id="prev-btn" type="button">← 前へ</button>
+            <button id="reset-btn" type="button">リセット</button>
+            <button id="next-btn" type="button">次へ →</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="stages.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
