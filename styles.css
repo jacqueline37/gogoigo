@@ -1,407 +1,162 @@
-:root {
-  --bg: #f5f1e8;
-  --panel: #fffdf8;
-  --panel-border: #d8cdb8;
-  --text: #2a241b;
-  --muted: #6f6658;
-  --accent: #8a5a2b;
-  --accent-soft: #efe1cc;
-  --shadow: 0 10px 30px rgba(52, 39, 20, 0.08);
-  --success: #1d7a42;
-  --error: #b33a2e;
-  --board: #d8b16a;
-  --board-line: #6c4c1f;
-  --target: #d9372a;
-  --star: #4d3314;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    "Hiragino Sans",
-    "Yu Gothic UI",
-    "Yu Gothic",
-    "Meiryo",
-    sans-serif;
-}
+/* ========= 全体 ========= */
 
 body {
-  min-height: 100vh;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-.app-shell {
-  width: 100%;
-  min-height: 100vh;
-}
-
-.topbar {
-  padding: 24px 24px 12px;
-}
-
-.topbar-left h1 {
   margin: 0;
-  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
-  line-height: 1.2;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f1e8;
+  color: #2a241b;
 }
 
-.eyebrow {
-  margin: 0 0 6px;
-  color: var(--accent);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  font-size: 0.9rem;
+.app {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
 }
 
-.subtitle {
-  margin: 10px 0 0;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 760px;
+/* ========= ヘッダー ========= */
+
+header {
+  margin-bottom: 20px;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 20px;
-  padding: 8px 24px 24px;
-}
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-}
-
-.sidebar {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 0;
-}
-
-.search-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.search-label {
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-#search {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--panel-border);
-  background: #fff;
-  color: var(--text);
-}
-
-#search:focus {
-  outline: 2px solid rgba(138, 90, 43, 0.2);
-  border-color: var(--accent);
-}
-
-.list-header h2 {
-  margin: 0 0 4px;
-  font-size: 1rem;
-}
-
-.list-header p {
+h1 {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
 }
 
-.term-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: auto;
-  padding-right: 4px;
+#stage-indicator {
+  color: #777;
+  margin-top: 6px;
 }
 
-.term {
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--panel-border);
-  background: #fff;
-  border-radius: 14px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition:
-    transform 0.14s ease,
-    border-color 0.14s ease,
-    background 0.14s ease;
-}
+/* ========= レイアウト ========= */
 
-.term:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-  background: #fffaf3;
-}
-
-.term.active {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
-.term.empty {
-  cursor: default;
-  color: var(--muted);
-  background: #faf7f1;
-}
-
-.term-title {
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.term-short {
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-.content {
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-width: 0;
-}
-
-.detail-kicker {
-  margin: 0 0 6px;
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 0.88rem;
-}
-
-.detail-title-wrap h2 {
-  margin: 0;
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-}
-
-.detail-body {
-  display: grid;
-  gap: 18px;
-}
-
-.info-card,
-.board-card,
-.hint-card {
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  background: #fff;
-  padding: 18px;
-}
-
-.info-card h3,
-.board-card h3,
-.hint-card h3 {
-  margin: 0 0 10px;
-  font-size: 1rem;
-}
-
-.info-card p,
-.hint-card p {
-  margin: 0;
-  line-height: 1.8;
-}
-
-.board-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 14px;
-}
-
-.board-card-header p {
-  margin: 6px 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.ghost-btn {
-  padding: 10px 14px;
-  border: 1px solid var(--panel-border);
-  background: #fff;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.ghost-btn:hover {
-  border-color: var(--accent);
-  background: #fffaf3;
-}
-
-.board-wrap {
+main {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
+
+.left {
+  width: 100%;
+}
+
+/* ========= テキスト ========= */
+
+h2 {
+  margin-top: 0;
+}
+
+#desc {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* ========= 盤面 ========= */
 
 .board {
   position: relative;
-  width: min(560px, 100%);
-  aspect-ratio: 1 / 1;
-  background: var(--board);
-  border-radius: 16px;
-  border: 1px solid #c39142;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.25),
-    inset 0 -10px 18px rgba(0,0,0,0.06);
+  width: 420px;
+  height: 420px;
+  margin: 20px auto;
+  background: #d8b16a;
+  border-radius: 12px;
+  border: 1px solid #b88f4a;
 }
 
-.grid-line {
+/* グリッド線（疑似） */
+.board::before,
+.board::after {
+  content: "";
   position: absolute;
-  background: var(--board-line);
-  opacity: 0.92;
+  inset: 20px;
+  background-image:
+    linear-gradient(#6c4c1f 1px, transparent 1px),
+    linear-gradient(90deg, #6c4c1f 1px, transparent 1px);
+  background-size: calc(100% / 8) calc(100% / 8);
+  pointer-events: none;
 }
 
-.grid-line.vertical {
-  top: 24px;
-  bottom: 24px;
-  width: 2px;
-  transform: translateX(-50%);
-}
-
-.grid-line.horizontal {
-  left: 24px;
-  right: 24px;
-  height: 2px;
-  transform: translateY(-50%);
-}
-
-.star-point {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: var(--star);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
+/* ========= 交点 ========= */
 
 .intersection {
   position: absolute;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   transform: translate(-50%, -50%);
-  border: none;
-  background: transparent;
   border-radius: 50%;
   cursor: pointer;
-  padding: 0;
 }
 
 .intersection:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255,255,255,0.2);
 }
 
-.intersection.target::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-  border: 2px solid var(--target);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.28);
-}
+/* ========= 石 ========= */
 
 .stone {
-  position: absolute;
-  inset: 2px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  box-shadow:
-    0 2px 5px rgba(0,0,0,0.26),
-    inset 0 1px 2px rgba(255,255,255,0.12);
 }
 
-.stone.black {
-  background: radial-gradient(circle at 30% 30%, #4d4d4d, #111 68%);
+.black {
+  background: radial-gradient(circle at 30% 30%, #555, #000);
 }
 
-.stone.white {
-  background: radial-gradient(circle at 30% 30%, #ffffff, #dfdfdf 70%);
-  border: 1px solid rgba(0, 0, 0, 0.22);
+.white {
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+  border: 1px solid #000;
 }
+
+/* ========= 正解位置 ========= */
+
+.target::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 2px solid red;
+  border-radius: 50%;
+}
+
+/* ========= ヒント ========= */
 
 .hint {
-  color: var(--muted);
+  text-align: center;
+  margin-top: 10px;
+  min-height: 24px;
+  font-weight: bold;
 }
 
-.hint.success {
-  color: var(--success);
-  font-weight: 700;
+/* ========= ボタン ========= */
+
+.controls {
+  margin-top: 20px;
+  text-align: center;
 }
 
-.hint.error {
-  color: var(--error);
-  font-weight: 700;
+button {
+  padding: 10px 16px;
+  margin: 0 5px;
+  border-radius: 8px;
+  border: none;
+  background: #8a5a2b;
+  color: white;
+  cursor: pointer;
 }
 
-@media (max-width: 960px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    order: 2;
-  }
-
-  .content {
-    order: 1;
-  }
+button:hover {
+  background: #6f461f;
 }
 
-@media (max-width: 640px) {
-  .topbar {
-    padding: 18px 16px 8px;
-  }
+/* ========= レスポンシブ ========= */
 
-  .layout {
-    padding: 8px 16px 16px;
-    gap: 16px;
-  }
-
-  .sidebar,
-  .content {
-    padding: 16px;
-  }
-
-  .board-card-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .ghost-btn {
-    width: 100%;
+@media (max-width: 600px) {
+  .board {
+    width: 90vw;
+    height: 90vw;
   }
 
   .intersection {
     width: 22px;
     height: 22px;
-  }
-
-  .stone {
-    inset: 2px;
   }
 }
