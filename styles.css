@@ -278,7 +278,8 @@ h1 {
 }
 
 .cell.highlight-answer {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
   border-radius: 50%;
 }
 
