@@ -25,10 +25,6 @@
   let userMove = null;
   let solvedMap = new Map();
 
-  function coordKey(x, y) {
-    return `${x},${y}`;
-  }
-
   function sameCoord(a, b) {
     return a && b && a.x === b.x && a.y === b.y;
   }
@@ -44,7 +40,6 @@
       const btn = document.createElement("button");
       btn.className = "term-item";
       btn.type = "button";
-      btn.dataset.index = String(index);
 
       const solved = solvedMap.get(stage.id) ? "✓ " : "";
       btn.innerHTML = `
@@ -83,8 +78,9 @@
   function renderInfo() {
     const stage = getCurrentStage();
     titleEl.textContent = `${String(currentStageIndex + 1).padStart(2, "0")} ${stage.title}`;
-    descriptionEl.textContent = stage.description;
-    instructionEl.textContent = stage.instruction || "盤面の交点をクリックして答えを選んでください。";
+    descriptionEl.textContent = stage.description || "";
+    instructionEl.textContent =
+      stage.instruction || "盤面の交点をクリックして答えを選んでください。";
   }
 
   function createStone(color, ghost = false) {
@@ -93,19 +89,8 @@
     return stone;
   }
 
-  function createMarker(text, useWhiteText = false) {
-    const marker = document.createElement("div");
-    marker.className = `marker ${useWhiteText ? "white-text" : "black-text"}`;
-    marker.textContent = text;
-    return marker;
-  }
-
   function getStoneAt(stage, x, y) {
     return (stage.stones || []).find((s) => s.x === x && s.y === y);
-  }
-
-  function getLabelAt(stage, x, y) {
-    return (stage.labels || []).find((l) => l.x === x && l.y === y);
   }
 
   function shouldShowStarPoint(size, x, y) {
@@ -121,7 +106,6 @@
     const occupied = getStoneAt(stage, x, y);
 
     if (occupied) return;
-    if (stage.lockAfterCorrect && solvedMap.get(stage.id)) return;
 
     userMove = { x, y };
 
@@ -129,7 +113,10 @@
       solvedMap.set(stage.id, true);
       setMessage(stage.successMessage || "正解です。", "success");
     } else {
-      setMessage(stage.failureMessage || "そこではありません。もう一度考えてみましょう。", "error");
+      setMessage(
+        stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
+        "error"
+      );
     }
 
     renderBoard();
@@ -157,9 +144,8 @@
         cell.setAttribute("aria-label", `${x + 1}列 ${y + 1}行`);
 
         const fixedStone = getStoneAt(stage, x, y);
-        const label = getLabelAt(stage, x, y);
-
         const correctSolved = solvedMap.get(stage.id) && sameCoord(stage.answer, { x, y });
+
         if (correctSolved) {
           cell.classList.add("highlight-answer");
         }
@@ -173,11 +159,6 @@
         if (fixedStone) {
           const stone = createStone(fixedStone.color);
           cell.appendChild(stone);
-        }
-
-        if (label) {
-          const labelOnBlack = fixedStone && fixedStone.color === "black";
-          cell.appendChild(createMarker(label.text, labelOnBlack));
         }
 
         if (userMove && sameCoord(userMove, { x, y })) {
@@ -210,9 +191,8 @@
   }
 
   function resetStage() {
-    const stage = getCurrentStage();
     userMove = null;
-    setMessage(stage.resetMessage || "盤面をリセットしました。", "");
+    setMessage("盤面をリセットしました。", "");
     renderBoard();
   }
 
@@ -233,7 +213,7 @@
   }
 
   function closeSidebarOnMobile() {
-    if (window.innerWidth <= 920) {
+    if (window.innerWidth <= 920 && sidebarEl && toggleSidebarBtn) {
       sidebarEl.classList.remove("open");
       toggleSidebarBtn.setAttribute("aria-expanded", "false");
       toggleSidebarBtn.textContent = "用語一覧を開く";
@@ -241,6 +221,7 @@
   }
 
   function toggleSidebar() {
+    if (!sidebarEl || !toggleSidebarBtn) return;
     const isOpen = sidebarEl.classList.toggle("open");
     toggleSidebarBtn.setAttribute("aria-expanded", String(isOpen));
     toggleSidebarBtn.textContent = isOpen ? "用語一覧を閉じる" : "用語一覧を開く";
@@ -249,10 +230,13 @@
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
   resetBtn.addEventListener("click", resetStage);
-  toggleSidebarBtn.addEventListener("click", toggleSidebar);
+
+  if (toggleSidebarBtn) {
+    toggleSidebarBtn.addEventListener("click", toggleSidebar);
+  }
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 920) {
+    if (window.innerWidth > 920 && sidebarEl && toggleSidebarBtn) {
       sidebarEl.classList.remove("open");
       toggleSidebarBtn.setAttribute("aria-expanded", "false");
       toggleSidebarBtn.textContent = "用語一覧を開く";
