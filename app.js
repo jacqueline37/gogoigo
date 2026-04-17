@@ -10,6 +10,7 @@
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
   const resetBtn = document.getElementById("reset-btn");
+  const restartBtn = document.getElementById("restart-btn");
   const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
   const sidebarEl = document.getElementById("sidebar");
 
@@ -196,6 +197,21 @@
     renderBoard();
   }
 
+  function restartAll() {
+    const ok = window.confirm("最初からやり直しますか？");
+    if (!ok) return;
+
+    currentStageIndex = 0;
+    userMove = null;
+    solvedMap = new Map();
+
+    setMessage("最初からやり直しました。", "");
+    renderAll();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    closeSidebarOnMobile();
+  }
+
   function goPrev() {
     if (currentStageIndex <= 0) return;
     currentStageIndex -= 1;
@@ -230,6 +246,10 @@
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
   resetBtn.addEventListener("click", resetStage);
+
+  if (restartBtn) {
+    restartBtn.addEventListener("click", restartAll);
+  }
 
   if (toggleSidebarBtn) {
     toggleSidebarBtn.addEventListener("click", toggleSidebar);
