@@ -27,64 +27,27 @@
       </div>
     </header>
 
-    <main class="layout">
-      <aside class="sidebar panel">
-        <div class="search-wrap">
-          <label for="search" class="search-label">用語検索</label>
-          <input
-            id="search"
-            type="text"
-            placeholder="例：キリ、ツギ、トビ"
-            autocomplete="off"
-          />
-        </div>
+   <main>
 
-        <div class="list-header">
-          <h2>基本囲碁用語</h2>
-          <p>19語を一覧表示しています</p>
-        </div>
+    <div class="left">
+      <h2 id="title"></h2>
+      <p id="desc"></p>
 
-        <div id="list" class="term-list" aria-label="囲碁用語一覧"></div>
-      </aside>
+      <div id="board" class="board"></div>
 
-      <section class="content panel">
-        <div class="detail-header">
-          <div class="detail-title-wrap">
-            <p class="detail-kicker">用語の体験</p>
-            <h2 id="title">用語を選択</h2>
-          </div>
-        </div>
+      <p id="hint" class="hint"></p>
 
-        <div class="detail-body">
-          <div class="info-card">
-            <h3>説明</h3>
-            <p id="desc">左の一覧から用語を選んでください。</p>
-          </div>
+      <div class="controls">
+        <button id="prev">← 前へ</button>
+        <button id="reset">リトライ</button>
+        <button id="next">次へ →</button>
+      </div>
+    </div>
 
-          <div class="board-card">
-            <div class="board-card-header">
-              <div>
-                <h3>ミニ盤面</h3>
-                <p>赤い目標地点に打ってみましょう</p>
-              </div>
-              <button id="reset" type="button" class="ghost-btn">リセット</button>
-            </div>
-
-            <div class="board-wrap">
-              <div id="board" class="board" aria-label="9路盤"></div>
-            </div>
-          </div>
-
-          <div class="hint-card">
-            <h3>ヒント</h3>
-            <p id="hint" class="hint"></p>
-          </div>
-        </div>
-      </section>
-    </main>
+  </main>
   </div>
 
-  <script src="terms.js"></script>
-  <script src="app.js"></script>
+  <script src="stages.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
