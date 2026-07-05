@@ -187,6 +187,11 @@
           cell.appendChild(stone);
         }
 
+        if (correctSolved && !fixedStone && !sameCoord(userMove, { x, y })) {
+          const color = stage.player === "white" ? "white" : "black";
+          cell.appendChild(createStone(color));
+        }
+
         if (userMove && sameCoord(userMove, { x, y })) {
           const isCorrect = sameCoord(stage.answer, userMove);
           const color = stage.player === "white" ? "white" : "black";
