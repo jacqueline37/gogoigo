@@ -3,10 +3,6 @@ window.GoRules = (() => {
   const BLACK = 1;
   const WHITE = 2;
 
-  function createEmptyBoard(size) {
-    return Array.from({ length: size }, () => Array(size).fill(EMPTY));
-  }
-
   function cloneBoard(board) {
     return board.map((row) => [...row]);
   }
@@ -138,13 +134,11 @@ window.GoRules = (() => {
     EMPTY,
     BLACK,
     WHITE,
-    createEmptyBoard,
     cloneBoard,
     hashBoard,
     within,
     neighbors,
     getGroup,
-    removeGroup,
     simulateMove,
     getCapturePreview,
     getForbiddenMoves,

@@ -47,7 +47,6 @@
     state.stageCleared = false;
     state.lastBoardHash = null;
     state.koLessonStep = 0;
-    nextBtn.disabled = true;
     setMessage(current.initialMessage || "交点をクリックしてください。");
     renderAll();
   }
@@ -66,7 +65,6 @@
 
   function clearStage() {
     state.stageCleared = true;
-    nextBtn.disabled = state.stageIndex >= stages.length - 1;
   }
 
   function currentTarget() {
@@ -79,7 +77,7 @@
     return current.target || null;
   }
 
-  function evaluateGoal(moveInfo = null) {
+  function evaluateGoal(moveInfo = null, x = null, y = null) {
     const current = stage();
     const goal = current.goal;
 
@@ -92,7 +90,8 @@
     }
 
     if (goal.type === "captureCount") {
-      if (moveInfo && moveInfo.captured.length >= goal.count) {
+      const atTarget = !current.target || (x === current.target.x && y === current.target.y);
+      if (moveInfo && atTarget && moveInfo.captured.length >= goal.count) {
         clearStage();
         setMessage(current.successMessage || "成功です。", "success");
       }
@@ -125,6 +124,14 @@
       }
       setMessage("今回は中央の禁止点をクリックして試してみましょう。", "error");
       return;
+    }
+
+    if (goal.type === "koLesson" && (state.koLessonStep === 0 || state.koLessonStep === 1)) {
+      const expected = currentTarget();
+      if (!expected || x !== expected.x || y !== expected.y) {
+        setMessage("ハイライトされた点をクリックしてみましょう。", "error");
+        return;
+      }
     }
 
     const previousBoardHash = state.lastBoardHash;
@@ -169,14 +176,12 @@
       setMessage("石を置きました。", "");
     }
 
-    evaluateGoal(sim);
+    evaluateGoal(sim, x, y);
     renderAll();
   }
 
   function createStone(color) {
-    const stone = document.createElement("div");
-    stone.className = `stone ${color === BLACK ? "black" : "white"}`;
-    return stone;
+    return window.BoardUI.createStone(color === BLACK ? "black" : "white");
   }
 
   function findPrimaryStone(board) {
@@ -214,12 +219,7 @@
         cell.type = "button";
         cell.className = "cell";
 
-        if (y === 0) cell.classList.add("edge-top");
-        if (y === size - 1) cell.classList.add("edge-bottom");
-        if (x === 0) cell.classList.add("edge-left");
-        if (x === size - 1) cell.classList.add("edge-right");
-
-        cell.setAttribute("aria-label", `${x + 1}列 ${y + 1}行`);
+        window.BoardUI.applyEdgeClasses(cell, x, y, size);
 
         if (target && target.x === x && target.y === y && !state.stageCleared) {
           cell.classList.add("target");

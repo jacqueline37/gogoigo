@@ -28,6 +28,7 @@
   let solvedMap = new Map();
   let autoNextTimer = null;
   let lastLiberties = [];
+  let lastCaptured = [];
 
   function sameCoord(a, b) {
     return a && b && a.x === b.x && a.y === b.y;
@@ -35,11 +36,10 @@
 
   function buildBoardArray(stage) {
     const size = stage.boardSize || 9;
-    const board = Array.from({ length: size }, () => Array(size).fill(0));
+    const board = Array.from({ length: size }, () => Array(size).fill(window.GoRules.EMPTY));
     (stage.stones || []).forEach((s) => {
-      board[s.y][s.x] = s.color === "white" ? 2 : 1;
+      board[s.y][s.x] = s.color === "white" ? window.GoRules.WHITE : window.GoRules.BLACK;
     });
-    board[stage.answer.y][stage.answer.x] = stage.player === "white" ? 2 : 1;
     return board;
   }
 
@@ -77,7 +77,7 @@
         currentStageIndex = index;
         userMove = null;
         lastLiberties = [];
-        consequenceEl.textContent = "";
+        lastCaptured = [];
         setMessage("", "");
         renderAll();
         closeSidebarOnMobile();
@@ -109,12 +109,6 @@
       stage.instruction || "盤面の交点をクリックして答えを選んでください。";
   }
 
-  function createStone(color, ghost = false) {
-    const stone = document.createElement("div");
-    stone.className = `stone ${color}${ghost ? " ghost" : ""}`;
-    return stone;
-  }
-
   function getStoneAt(stage, x, y) {
     return (stage.stones || []).find((s) => s.x === x && s.y === y);
   }
@@ -129,6 +123,9 @@
 
   function handleCellClick(x, y) {
     const stage = getCurrentStage();
+
+    if (solvedMap.get(stage.id)) return;
+
     const occupied = getStoneAt(stage, x, y);
 
     if (occupied) return;
@@ -141,9 +138,10 @@
       setMessage(stage.successMessage || "正解です。", "success");
 
       const board = buildBoardArray(stage);
-      const group = window.GoRules.getGroup(board, stage.answer.x, stage.answer.y);
-      lastLiberties = group.liberties;
-      consequenceEl.textContent = `残り呼吸点: ${group.liberties.length}`;
+      const player = stage.player === "white" ? window.GoRules.WHITE : window.GoRules.BLACK;
+      const sim = window.GoRules.simulateMove(board, stage.answer.x, stage.answer.y, player);
+      lastLiberties = sim.valid ? sim.liberties : [];
+      lastCaptured = sim.valid ? sim.captured : [];
 
       renderBoard();
       buildTermList();
@@ -160,7 +158,7 @@
     }
 
     lastLiberties = [];
-    consequenceEl.textContent = "";
+    lastCaptured = [];
 
     setMessage(
       stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
@@ -177,6 +175,9 @@
     const size = stage.boardSize || 9;
     boardEl.innerHTML = "";
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
+    consequenceEl.textContent = lastLiberties.length
+      ? `残り呼吸点: ${lastLiberties.length}`
+      : "";
 
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
@@ -184,40 +185,37 @@
         cell.type = "button";
         cell.className = "cell";
 
-        if (y === 0) cell.classList.add("edge-top");
-        if (y === size - 1) cell.classList.add("edge-bottom");
-        if (x === 0) cell.classList.add("edge-left");
-        if (x === size - 1) cell.classList.add("edge-right");
-
-        cell.setAttribute("aria-label", `${x + 1}列 ${y + 1}行`);
+        window.BoardUI.applyEdgeClasses(cell, x, y, size);
 
         const fixedStone = getStoneAt(stage, x, y);
+        const capturedHere = lastCaptured.some((c) => c.x === x && c.y === y);
+        const showFixedStone = fixedStone && !capturedHere;
         const correctSolved = solvedMap.get(stage.id) && sameCoord(stage.answer, { x, y });
 
         if (correctSolved) {
           cell.classList.add("highlight-answer");
         }
 
-        if (shouldShowStarPoint(size, x, y) && !fixedStone && !sameCoord(userMove, { x, y })) {
+        if (shouldShowStarPoint(size, x, y) && !showFixedStone && !sameCoord(userMove, { x, y })) {
           const star = document.createElement("div");
           star.className = "star-point-dot";
           cell.appendChild(star);
         }
 
-        if (fixedStone) {
-          const stone = createStone(fixedStone.color);
+        if (showFixedStone) {
+          const stone = window.BoardUI.createStone(fixedStone.color);
           cell.appendChild(stone);
         }
 
-        if (correctSolved && !fixedStone && !sameCoord(userMove, { x, y })) {
+        if (correctSolved && !showFixedStone && !sameCoord(userMove, { x, y })) {
           const color = stage.player === "white" ? "white" : "black";
-          cell.appendChild(createStone(color));
+          cell.appendChild(window.BoardUI.createStone(color));
         }
 
         if (userMove && sameCoord(userMove, { x, y })) {
           const isCorrect = sameCoord(stage.answer, userMove);
           const color = stage.player === "white" ? "white" : "black";
-          const ghostStone = createStone(color, false);
+          const ghostStone = window.BoardUI.createStone(color, false);
           ghostStone.style.outline = isCorrect
             ? "3px solid rgba(31,107,42,0.7)"
             : "3px solid rgba(140,45,45,0.65)";
@@ -253,7 +251,7 @@
     clearAutoNextTimer();
     userMove = null;
     lastLiberties = [];
-    consequenceEl.textContent = "";
+    lastCaptured = [];
     setMessage("盤面をリセットしました。", "");
     renderBoard();
   }
@@ -266,7 +264,7 @@
     currentStageIndex = 0;
     userMove = null;
     lastLiberties = [];
-    consequenceEl.textContent = "";
+    lastCaptured = [];
     solvedMap = new Map();
 
     setMessage("最初からやり直しました。", "");
@@ -282,7 +280,7 @@
     currentStageIndex -= 1;
     userMove = null;
     lastLiberties = [];
-    consequenceEl.textContent = "";
+    lastCaptured = [];
     setMessage("", "");
     renderAll();
   }
@@ -293,7 +291,7 @@
     currentStageIndex += 1;
     userMove = null;
     lastLiberties = [];
-    consequenceEl.textContent = "";
+    lastCaptured = [];
     setMessage("", "");
     renderAll();
   }
