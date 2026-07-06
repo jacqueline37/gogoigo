@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jacqueline37.github.io/gogoigo/sitemap.xml
