@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>囲碁のルールを体験で学ぶ</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1BF9HSHYEM');
+</script>
+</head>
+<body>
+  <div class="app">
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">Interactive Go Rules</p>
+        <h1>囲碁のルールを体験で学ぶ</h1>
+        <p class="lead">
+          実際に石を置きながら、呼吸点・アタリ・取る・コウといった囲碁の基本ルールを体感するページです。
+        </p>
+      </div>
+
+      <div class="header-status">
+        <p id="stage-indicator" class="stage-indicator">第1問 / 5</p>
+        <a class="ghost-btn nav-link" href="index.html">用語編を見る →</a>
+      </div>
+    </header>
+
+    <main class="layout layout-single">
+      <section class="content">
+        <div class="card intro-card">
+          <p class="section-label">ルールの説明</p>
+          <h2 id="rule-title">読み込み中...</h2>
+          <p id="rule-subtitle" class="term-instruction"></p>
+          <p id="rule-description" class="term-description"></p>
+          <p id="rule-objective" class="term-instruction"></p>
+        </div>
+
+        <div class="card board-card">
+          <div id="board" class="board" aria-label="囲碁盤"></div>
+          <p id="message" class="message" aria-live="polite"></p>
+        </div>
+
+        <div class="controls">
+          <button id="prev-btn" type="button">← 前へ</button>
+          <button id="retry-btn" type="button">もう一度</button>
+          <button id="next-btn" type="button">次へ →</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="go-rules.js"></script>
+  <script src="rules-stages.js"></script>
+  <script src="rules.js"></script>
+</body>
+</html>

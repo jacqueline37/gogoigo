@@ -4,6 +4,7 @@
   const descriptionEl = document.getElementById("term-description");
   const instructionEl = document.getElementById("term-instruction");
   const messageEl = document.getElementById("message");
+  const consequenceEl = document.getElementById("consequence");
   const stageIndicatorEl = document.getElementById("stage-indicator");
   const termListEl = document.getElementById("term-list");
 
@@ -26,9 +27,20 @@
   let userMove = null;
   let solvedMap = new Map();
   let autoNextTimer = null;
+  let lastLiberties = [];
 
   function sameCoord(a, b) {
     return a && b && a.x === b.x && a.y === b.y;
+  }
+
+  function buildBoardArray(stage) {
+    const size = stage.boardSize || 9;
+    const board = Array.from({ length: size }, () => Array(size).fill(0));
+    (stage.stones || []).forEach((s) => {
+      board[s.y][s.x] = s.color === "white" ? 2 : 1;
+    });
+    board[stage.answer.y][stage.answer.x] = stage.player === "white" ? 2 : 1;
+    return board;
   }
 
   function getCurrentStage() {
@@ -64,6 +76,8 @@
         clearAutoNextTimer();
         currentStageIndex = index;
         userMove = null;
+        lastLiberties = [];
+        consequenceEl.textContent = "";
         setMessage("", "");
         renderAll();
         closeSidebarOnMobile();
@@ -126,6 +140,11 @@
       solvedMap.set(stage.id, true);
       setMessage(stage.successMessage || "正解です。", "success");
 
+      const board = buildBoardArray(stage);
+      const group = window.GoRules.getGroup(board, stage.answer.x, stage.answer.y);
+      lastLiberties = group.liberties;
+      consequenceEl.textContent = `残り呼吸点: ${group.liberties.length}`;
+
       renderBoard();
       buildTermList();
       updateButtons();
@@ -134,11 +153,14 @@
       if (currentStageIndex < stages.length - 1) {
         autoNextTimer = setTimeout(() => {
           goNext();
-        }, 800);
+        }, 1500);
       }
 
       return;
     }
+
+    lastLiberties = [];
+    consequenceEl.textContent = "";
 
     setMessage(
       stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
@@ -202,6 +224,12 @@
           cell.appendChild(ghostStone);
         }
 
+        if (lastLiberties.some((lib) => lib.x === x && lib.y === y)) {
+          const marker = document.createElement("div");
+          marker.className = "liberty-highlight";
+          cell.appendChild(marker);
+        }
+
         cell.addEventListener("click", () => handleCellClick(x, y));
         boardEl.appendChild(cell);
       }
@@ -224,6 +252,8 @@
   function resetStage() {
     clearAutoNextTimer();
     userMove = null;
+    lastLiberties = [];
+    consequenceEl.textContent = "";
     setMessage("盤面をリセットしました。", "");
     renderBoard();
   }
@@ -235,6 +265,8 @@
     clearAutoNextTimer();
     currentStageIndex = 0;
     userMove = null;
+    lastLiberties = [];
+    consequenceEl.textContent = "";
     solvedMap = new Map();
 
     setMessage("最初からやり直しました。", "");
@@ -249,6 +281,8 @@
     if (currentStageIndex <= 0) return;
     currentStageIndex -= 1;
     userMove = null;
+    lastLiberties = [];
+    consequenceEl.textContent = "";
     setMessage("", "");
     renderAll();
   }
@@ -258,6 +292,8 @@
     if (currentStageIndex >= stages.length - 1) return;
     currentStageIndex += 1;
     userMove = null;
+    lastLiberties = [];
+    consequenceEl.textContent = "";
     setMessage("", "");
     renderAll();
   }
