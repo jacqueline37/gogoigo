@@ -110,6 +110,17 @@ h1 {
   white-space: nowrap;
 }
 
+.ghost-btn.nav-link.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.ghost-btn.nav-link.primary:hover {
+  opacity: 0.92;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 320px 1fr;
@@ -382,14 +393,15 @@ h1 {
 
 .liberty-highlight {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 46%;
+  height: 46%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 2px solid rgba(31, 107, 42, 0.6);
-  background: rgba(31, 107, 42, 0.12);
+  border: 3px solid rgba(31, 107, 42, 0.85);
+  background: rgba(31, 107, 42, 0.25);
+  box-shadow: 0 0 6px rgba(31, 107, 42, 0.35);
   z-index: 1;
   pointer-events: none;
 }
@@ -478,7 +490,7 @@ h1 {
 
 @media (max-width: 560px) {
   :root {
-    --board-cell: min(9.2vw, 38px);
+    --board-cell: 42px;
   }
 
   .app {

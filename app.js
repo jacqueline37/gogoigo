@@ -151,7 +151,7 @@
       if (currentStageIndex < stages.length - 1) {
         autoNextTimer = setTimeout(() => {
           goNext();
-        }, 1500);
+        }, 2200);
       }
 
       return;
@@ -177,6 +177,9 @@
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
     consequenceEl.textContent = lastLiberties.length
       ? `残り呼吸点: ${lastLiberties.length}`
+      : "";
+    consequenceEl.title = lastLiberties.length
+      ? "呼吸点とは、石に隣接する空いている交点の数です。0になるとその石は取られます。"
       : "";
 
     for (let y = 0; y < size; y++) {
