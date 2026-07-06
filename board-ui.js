@@ -13,5 +13,21 @@ window.BoardUI = (() => {
     return stone;
   }
 
-  return { applyEdgeClasses, createStone };
+  function computeCellSize(boardEl, size) {
+    const container = boardEl.parentElement;
+    const containerWidth = container ? container.clientWidth : 0;
+    if (!containerWidth) return 48;
+
+    const cardPadding = 40; // .card's left+right padding
+    const boardChrome = 28; // .board's own padding+border
+    const buffer = 8;
+    const available = containerWidth - cardPadding - boardChrome - buffer;
+
+    const maxCell = 48;
+    const minCell = 26;
+    const cell = Math.floor(available / size);
+    return Math.max(minCell, Math.min(maxCell, cell));
+  }
+
+  return { applyEdgeClasses, createStone, computeCellSize };
 })();

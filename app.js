@@ -174,6 +174,8 @@
     const stage = getCurrentStage();
     const size = stage.boardSize || 9;
     boardEl.innerHTML = "";
+    const cellSize = window.BoardUI.computeCellSize(boardEl, size);
+    boardEl.style.setProperty("--board-cell", `${cellSize}px`);
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
     consequenceEl.textContent = lastLiberties.length
       ? `残り呼吸点: ${lastLiberties.length}`
@@ -332,6 +334,7 @@
       toggleSidebarBtn.setAttribute("aria-expanded", "false");
       toggleSidebarBtn.textContent = "用語一覧を開く";
     }
+    renderBoard();
   });
 
   renderAll();

@@ -197,6 +197,8 @@
     const current = stage();
     const size = state.board.length;
     boardEl.innerHTML = "";
+    const cellSize = window.BoardUI.computeCellSize(boardEl, size);
+    boardEl.style.setProperty("--board-cell", `${cellSize}px`);
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
 
     const target = currentTarget();
@@ -275,6 +277,10 @@
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
   retryBtn.addEventListener("click", resetStage);
+
+  window.addEventListener("resize", () => {
+    renderBoard();
+  });
 
   loadStage(0);
 })();

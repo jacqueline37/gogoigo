@@ -489,10 +489,6 @@ h1 {
 }
 
 @media (max-width: 560px) {
-  :root {
-    --board-cell: 42px;
-  }
-
   .app {
     width: min(100% - 16px, 1200px);
     padding-top: 12px;
