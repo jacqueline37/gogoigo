@@ -508,3 +508,15 @@ h1 {
     grid-column: 1 / -1;
   }
 }
+
+@media (max-width: 400px) {
+  .board-card {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .board {
+    padding: 6px;
+    border-width: 1px;
+  }
+}

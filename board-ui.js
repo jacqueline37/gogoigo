@@ -18,10 +18,19 @@ window.BoardUI = (() => {
     const containerWidth = container ? container.clientWidth : 0;
     if (!containerWidth) return 48;
 
-    const cardPadding = 40; // .card's left+right padding
-    const boardChrome = 28; // .board's own padding+border
-    const buffer = 8;
-    const available = containerWidth - cardPadding - boardChrome - buffer;
+    const containerStyle = getComputedStyle(container);
+    const containerPadding =
+      parseFloat(containerStyle.paddingLeft) + parseFloat(containerStyle.paddingRight);
+
+    const boardStyle = getComputedStyle(boardEl);
+    const boardChrome =
+      parseFloat(boardStyle.paddingLeft) +
+      parseFloat(boardStyle.paddingRight) +
+      parseFloat(boardStyle.borderLeftWidth) +
+      parseFloat(boardStyle.borderRightWidth);
+
+    const buffer = 2;
+    const available = containerWidth - containerPadding - boardChrome - buffer;
 
     const maxCell = 48;
     const minCell = 26;
