@@ -64,9 +64,9 @@ window.GoRules = (() => {
   }
 
   function simulateMove(board, x, y, player, previousBoardHash = null) {
-    if (!within(board, x, y)) return { valid: false, reason: "盤外です。" };
+    if (!within(board, x, y)) return { valid: false, reason: "盤外です。", reasonKey: "outOfBounds" };
     if (board[y][x] !== EMPTY) {
-      return { valid: false, reason: "その交点にはすでに石があります。" };
+      return { valid: false, reason: "その交点にはすでに石があります。", reasonKey: "occupied" };
     }
 
     const nextBoard = cloneBoard(board);
@@ -85,12 +85,12 @@ window.GoRules = (() => {
 
     const ownGroup = getGroup(nextBoard, x, y);
     if (ownGroup.liberties.length === 0) {
-      return { valid: false, reason: "自分の石の呼吸点がなくなるため、自殺手です。" };
+      return { valid: false, reason: "自分の石の呼吸点がなくなるため、自殺手です。", reasonKey: "suicide" };
     }
 
     const nextHash = hashBoard(nextBoard);
     if (previousBoardHash && nextHash === previousBoardHash) {
-      return { valid: false, reason: "コウです。同じ盤面をすぐには繰り返せません。", isKo: true };
+      return { valid: false, reason: "コウです。同じ盤面をすぐには繰り返せません。", reasonKey: "ko", isKo: true };
     }
 
     return {

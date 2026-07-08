@@ -14,10 +14,39 @@
   const restartBtn = document.getElementById("restart-btn");
   const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
   const sidebarEl = document.getElementById("sidebar");
+  const langToggleBtn = document.getElementById("lang-toggle-btn");
+
+  const eyebrowEl = document.getElementById("page-eyebrow");
+  const siteTitleEl = document.getElementById("site-title");
+  const siteLeadEl = document.getElementById("site-lead");
+  const rulesLinkEl = document.getElementById("rules-link");
+  const sidebarTitleEl = document.getElementById("sidebar-title");
+  const sidebarNoteEl = document.getElementById("sidebar-note");
+  const sectionLabelEl = document.getElementById("section-label");
+
+  function lang() {
+    return window.I18N ? window.I18N.getLang() : "ja";
+  }
+
+  function t() {
+    return window.I18N ? window.I18N.ui[lang()].index : null;
+  }
+
+  function tc() {
+    return window.I18N ? window.I18N.ui[lang()].common : null;
+  }
+
+  function stageText(stage) {
+    if (lang() === "en" && window.I18N && window.I18N.terms.en[stage.id]) {
+      return window.I18N.terms.en[stage.id];
+    }
+    return stage;
+  }
 
   if (!window.STAGES || !Array.isArray(window.STAGES) || window.STAGES.length === 0) {
-    titleEl.textContent = "データが見つかりません";
-    descriptionEl.textContent = "stages.js の読み込みに失敗している可能性があります。";
+    const strings = t() || { dataMissingTitle: "データが見つかりません", dataMissingDesc: "stages.js の読み込みに失敗している可能性があります。" };
+    titleEl.textContent = strings.dataMissingTitle;
+    descriptionEl.textContent = strings.dataMissingDesc;
     return;
   }
 
@@ -29,6 +58,7 @@
   let autoNextTimer = null;
   let lastLiberties = [];
   let lastCaptured = [];
+  let isSidebarOpen = false;
 
   function sameCoord(a, b) {
     return a && b && a.x === b.x && a.y === b.y;
@@ -65,7 +95,7 @@
       const solved = solvedMap.get(stage.id) ? "✓ " : "";
       btn.innerHTML = `
         <span class="term-index">${String(index + 1).padStart(2, "0")}</span>
-        <span>${solved}${stage.title}</span>
+        <span>${solved}${stageText(stage).title}</span>
       `;
 
       if (index === currentStageIndex) {
@@ -97,16 +127,15 @@
 
   function renderHeader() {
     const solvedCount = solvedMap.size;
-    stageIndicatorEl.textContent =
-      `第${currentStageIndex + 1}問 / ${stages.length}（${solvedCount}問クリア）`;
+    stageIndicatorEl.textContent = t().stageIndicator(currentStageIndex + 1, stages.length, solvedCount);
   }
 
   function renderInfo() {
     const stage = getCurrentStage();
-    titleEl.textContent = `${String(currentStageIndex + 1).padStart(2, "0")} ${stage.title}`;
-    descriptionEl.textContent = stage.description || "";
-    instructionEl.textContent =
-      stage.instruction || "盤面の交点をクリックして答えを選んでください。";
+    const text = stageText(stage);
+    titleEl.textContent = `${String(currentStageIndex + 1).padStart(2, "0")} ${text.title}`;
+    descriptionEl.textContent = text.description || "";
+    instructionEl.textContent = text.instruction || t().defaultInstruction;
   }
 
   function getStoneAt(stage, x, y) {
@@ -123,6 +152,7 @@
 
   function handleCellClick(x, y) {
     const stage = getCurrentStage();
+    const text = stageText(stage);
 
     if (solvedMap.get(stage.id)) return;
 
@@ -135,7 +165,7 @@
 
     if (sameCoord(userMove, stage.answer)) {
       solvedMap.set(stage.id, true);
-      setMessage(stage.successMessage || "正解です。", "success");
+      setMessage(text.successMessage || t().defaultSuccess, "success");
 
       const board = buildBoardArray(stage);
       const player = stage.player === "white" ? window.GoRules.WHITE : window.GoRules.BLACK;
@@ -160,10 +190,7 @@
     lastLiberties = [];
     lastCaptured = [];
 
-    setMessage(
-      stage.failureMessage || "そこではありません。もう一度考えてみましょう。",
-      "error"
-    );
+    setMessage(text.failureMessage || t().defaultFailure, "error");
 
     renderBoard();
     buildTermList();
@@ -174,15 +201,14 @@
     const stage = getCurrentStage();
     const size = stage.boardSize || 9;
     boardEl.innerHTML = "";
+    boardEl.setAttribute("aria-label", tc().boardAriaLabel);
     const cellSize = window.BoardUI.computeCellSize(boardEl, size);
     boardEl.style.setProperty("--board-cell", `${cellSize}px`);
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
     consequenceEl.textContent = lastLiberties.length
-      ? `残り呼吸点: ${lastLiberties.length}`
+      ? t().libertyLabel(lastLiberties.length)
       : "";
-    consequenceEl.title = lastLiberties.length
-      ? "呼吸点とは、石に隣接する空いている交点の数です。0になるとその石は取られます。"
-      : "";
+    consequenceEl.title = lastLiberties.length ? t().libertyTooltip : "";
 
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
@@ -257,12 +283,12 @@
     userMove = null;
     lastLiberties = [];
     lastCaptured = [];
-    setMessage("盤面をリセットしました。", "");
+    setMessage(t().resetMessage, "");
     renderBoard();
   }
 
   function restartAll() {
-    const ok = window.confirm("最初からやり直しますか？");
+    const ok = window.confirm(t().restartConfirm);
     if (!ok) return;
 
     clearAutoNextTimer();
@@ -272,7 +298,7 @@
     lastCaptured = [];
     solvedMap = new Map();
 
-    setMessage("最初からやり直しました。", "");
+    setMessage(t().restartMessage, "");
     renderAll();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -301,19 +327,53 @@
     renderAll();
   }
 
+  function updateToggleSidebarText() {
+    if (!toggleSidebarBtn) return;
+    toggleSidebarBtn.textContent = isSidebarOpen ? t().toggleSidebarClose : t().toggleSidebarOpen;
+  }
+
   function closeSidebarOnMobile() {
     if (window.innerWidth <= 920 && sidebarEl && toggleSidebarBtn) {
+      isSidebarOpen = false;
       sidebarEl.classList.remove("open");
       toggleSidebarBtn.setAttribute("aria-expanded", "false");
-      toggleSidebarBtn.textContent = "用語一覧を開く";
+      updateToggleSidebarText();
     }
   }
 
   function toggleSidebar() {
     if (!sidebarEl || !toggleSidebarBtn) return;
-    const isOpen = sidebarEl.classList.toggle("open");
-    toggleSidebarBtn.setAttribute("aria-expanded", String(isOpen));
-    toggleSidebarBtn.textContent = isOpen ? "用語一覧を閉じる" : "用語一覧を開く";
+    isSidebarOpen = sidebarEl.classList.toggle("open");
+    toggleSidebarBtn.setAttribute("aria-expanded", String(isSidebarOpen));
+    updateToggleSidebarText();
+  }
+
+  function applyStaticUI() {
+    const strings = t();
+    const common = tc();
+
+    document.documentElement.lang = lang();
+    document.title = strings.pageTitle;
+
+    if (eyebrowEl) eyebrowEl.textContent = strings.eyebrow;
+    if (siteTitleEl) siteTitleEl.textContent = strings.h1;
+    if (siteLeadEl) siteLeadEl.textContent = strings.lead;
+    if (rulesLinkEl) rulesLinkEl.textContent = strings.rulesLink;
+    if (sidebarTitleEl) sidebarTitleEl.textContent = strings.sidebarTitle;
+    if (sidebarNoteEl) sidebarNoteEl.textContent = strings.sidebarNote;
+    if (sectionLabelEl) sectionLabelEl.textContent = strings.sectionLabel;
+
+    prevBtn.textContent = common.prev;
+    nextBtn.textContent = common.next;
+    resetBtn.textContent = strings.reset;
+    if (restartBtn) restartBtn.textContent = strings.restart;
+
+    updateToggleSidebarText();
+
+    if (langToggleBtn) {
+      langToggleBtn.textContent = common.langToggleLabel;
+      langToggleBtn.setAttribute("aria-label", common.langToggleAriaLabel);
+    }
   }
 
   prevBtn.addEventListener("click", goPrev);
@@ -328,14 +388,25 @@
     toggleSidebarBtn.addEventListener("click", toggleSidebar);
   }
 
+  if (langToggleBtn) {
+    langToggleBtn.addEventListener("click", () => {
+      if (!window.I18N) return;
+      window.I18N.toggleLang();
+      applyStaticUI();
+      renderAll();
+    });
+  }
+
   window.addEventListener("resize", () => {
     if (window.innerWidth > 920 && sidebarEl && toggleSidebarBtn) {
+      isSidebarOpen = false;
       sidebarEl.classList.remove("open");
       toggleSidebarBtn.setAttribute("aria-expanded", "false");
-      toggleSidebarBtn.textContent = "用語一覧を開く";
+      updateToggleSidebarText();
     }
     renderBoard();
   });
 
+  applyStaticUI();
   renderAll();
 })();

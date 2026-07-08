@@ -14,10 +14,45 @@
   const prevBtn = document.getElementById("prev-btn");
   const retryBtn = document.getElementById("retry-btn");
   const nextBtn = document.getElementById("next-btn");
+  const langToggleBtn = document.getElementById("lang-toggle-btn");
+
+  const eyebrowEl = document.getElementById("page-eyebrow");
+  const siteTitleEl = document.getElementById("site-title");
+  const siteLeadEl = document.getElementById("site-lead");
+  const indexLinkEl = document.getElementById("index-link");
+  const sectionLabelEl = document.getElementById("section-label");
+
+  function lang() {
+    return window.I18N ? window.I18N.getLang() : "ja";
+  }
+
+  function t() {
+    return window.I18N ? window.I18N.ui[lang()].rules : null;
+  }
+
+  function tc() {
+    return window.I18N ? window.I18N.ui[lang()].common : null;
+  }
+
+  function ruleText(stage) {
+    if (lang() === "en" && window.I18N && window.I18N.rulesContent.en[stage.id]) {
+      return window.I18N.rulesContent.en[stage.id];
+    }
+    return stage;
+  }
+
+  function localizeReason(sim) {
+    if (window.I18N && sim.reasonKey) {
+      const dict = window.I18N.goRules[lang()];
+      if (dict && dict[sim.reasonKey]) return dict[sim.reasonKey];
+    }
+    return sim.reason;
+  }
 
   if (!GoRules || !stages || !Array.isArray(stages) || stages.length === 0) {
-    titleEl.textContent = "データが見つかりません";
-    descriptionEl.textContent = "go-rules.js / rules-stages.js の読み込みに失敗している可能性があります。";
+    const strings = t() || { dataMissingTitle: "データが見つかりません", dataMissingDesc: "go-rules.js / rules-stages.js の読み込みに失敗している可能性があります。" };
+    titleEl.textContent = strings.dataMissingTitle;
+    descriptionEl.textContent = strings.dataMissingDesc;
     return;
   }
 
@@ -47,20 +82,25 @@
     state.stageCleared = false;
     state.lastBoardHash = null;
     state.koLessonStep = 0;
-    setMessage(current.initialMessage || "交点をクリックしてください。");
+    setMessage(ruleText(current).initialMessage || t().defaultInitialMessage);
     renderAll();
   }
 
   function loadStage(index) {
     state.stageIndex = Math.max(0, Math.min(index, stages.length - 1));
-    const current = stage();
-    stageIndicatorEl.textContent = `第${state.stageIndex + 1}問 / ${stages.length}`;
-    titleEl.textContent = `${String(state.stageIndex + 1).padStart(2, "0")} ${current.title}`;
-    subtitleEl.textContent = current.subtitle || "";
-    descriptionEl.textContent = current.description || "";
-    objectiveEl.textContent = current.objective || "";
+    refreshStageTexts();
     prevBtn.disabled = state.stageIndex === 0;
     resetStage();
+  }
+
+  function refreshStageTexts() {
+    const current = stage();
+    const text = ruleText(current);
+    stageIndicatorEl.textContent = t().stageIndicator(state.stageIndex + 1, stages.length);
+    titleEl.textContent = `${String(state.stageIndex + 1).padStart(2, "0")} ${text.title}`;
+    subtitleEl.textContent = text.subtitle || "";
+    descriptionEl.textContent = text.description || "";
+    objectiveEl.textContent = text.objective || "";
   }
 
   function clearStage() {
@@ -79,12 +119,13 @@
 
   function evaluateGoal(moveInfo = null, x = null, y = null) {
     const current = stage();
+    const text = ruleText(current);
     const goal = current.goal;
 
     if (goal.type === "placeAt") {
       if (state.board[goal.y][goal.x] === BLACK) {
         clearStage();
-        setMessage(current.successMessage || "成功です。", "success");
+        setMessage(text.successMessage || t().defaultSuccessMessage, "success");
       }
       return;
     }
@@ -93,19 +134,19 @@
       const atTarget = !current.target || (x === current.target.x && y === current.target.y);
       if (moveInfo && atTarget && moveInfo.captured.length >= goal.count) {
         clearStage();
-        setMessage(current.successMessage || "成功です。", "success");
+        setMessage(text.successMessage || t().defaultSuccessMessage, "success");
       }
       return;
     }
 
     if (goal.type === "koLesson") {
       if (state.koLessonStep === 1) {
-        setMessage("白の番になりました。今度はすぐ取り返したくなる場所をクリックしてみてください。", "success");
+        setMessage(t().koWhiteTurnMessage, "success");
         return;
       }
       if (state.koLessonStep === 2) {
         clearStage();
-        setMessage(current.successMessage || "成功です。", "success");
+        setMessage(text.successMessage || t().defaultSuccessMessage, "success");
       }
     }
   }
@@ -113,23 +154,24 @@
   function handleCellClick(x, y) {
     if (state.stageCleared) return;
     const current = stage();
+    const text = ruleText(current);
     const goal = current.goal;
 
     if (goal.type === "attemptForbidden") {
       if (x === goal.x && y === goal.y) {
         clearStage();
-        setMessage(current.successMessage || "その手は禁止されています。", "success");
+        setMessage(text.successMessage || t().forbiddenSuccessFallback, "success");
         renderAll();
         return;
       }
-      setMessage("今回は中央の禁止点をクリックして試してみましょう。", "error");
+      setMessage(t().forbiddenHintMessage, "error");
       return;
     }
 
     if (goal.type === "koLesson" && (state.koLessonStep === 0 || state.koLessonStep === 1)) {
       const expected = currentTarget();
       if (!expected || x !== expected.x || y !== expected.y) {
-        setMessage("ハイライトされた点をクリックしてみましょう。", "error");
+        setMessage(t().koHintMessage, "error");
         return;
       }
     }
@@ -150,7 +192,7 @@
         renderAll();
         return;
       }
-      setMessage(sim.reason, "error");
+      setMessage(localizeReason(sim), "error");
       return;
     }
 
@@ -171,9 +213,9 @@
     }
 
     if (sim.captured.length > 0) {
-      setMessage(`${sim.captured.length}個の石を取りました。`, "success");
+      setMessage(t().capturedMessage(sim.captured.length), "success");
     } else {
-      setMessage("石を置きました。", "");
+      setMessage(t().placedMessage, "");
     }
 
     evaluateGoal(sim, x, y);
@@ -197,6 +239,7 @@
     const current = stage();
     const size = state.board.length;
     boardEl.innerHTML = "";
+    boardEl.setAttribute("aria-label", tc().boardAriaLabel);
     const cellSize = window.BoardUI.computeCellSize(boardEl, size);
     boardEl.style.setProperty("--board-cell", `${cellSize}px`);
     boardEl.style.gridTemplateColumns = `repeat(${size}, var(--board-cell))`;
@@ -274,13 +317,47 @@
     loadStage(state.stageIndex + 1);
   }
 
+  function applyStaticUI() {
+    const strings = t();
+    const common = tc();
+
+    document.documentElement.lang = lang();
+    document.title = strings.pageTitle;
+
+    if (eyebrowEl) eyebrowEl.textContent = strings.eyebrow;
+    if (siteTitleEl) siteTitleEl.textContent = strings.h1;
+    if (siteLeadEl) siteLeadEl.textContent = strings.lead;
+    if (indexLinkEl) indexLinkEl.textContent = strings.indexLink;
+    if (sectionLabelEl) sectionLabelEl.textContent = strings.sectionLabel;
+
+    prevBtn.textContent = common.prev;
+    nextBtn.textContent = common.next;
+    retryBtn.textContent = strings.retry;
+
+    if (langToggleBtn) {
+      langToggleBtn.textContent = common.langToggleLabel;
+      langToggleBtn.setAttribute("aria-label", common.langToggleAriaLabel);
+    }
+  }
+
   prevBtn.addEventListener("click", goPrev);
   nextBtn.addEventListener("click", goNext);
   retryBtn.addEventListener("click", resetStage);
+
+  if (langToggleBtn) {
+    langToggleBtn.addEventListener("click", () => {
+      if (!window.I18N) return;
+      window.I18N.toggleLang();
+      applyStaticUI();
+      refreshStageTexts();
+      renderAll();
+    });
+  }
 
   window.addEventListener("resize", () => {
     renderBoard();
   });
 
+  applyStaticUI();
   loadStage(0);
 })();
