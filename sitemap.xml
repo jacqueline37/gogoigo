@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://jacqueline37.github.io/gogoigo/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/" />
   </url>
   <url>
     <loc>https://jacqueline37.github.io/gogoigo/rules.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/rules.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/rules.html" />
+  </url>
+  <url>
+    <loc>https://jacqueline37.github.io/gogoigo/en/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/" />
+  </url>
+  <url>
+    <loc>https://jacqueline37.github.io/gogoigo/en/rules.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/rules.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/rules.html" />
   </url>
 </urlset>

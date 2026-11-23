@@ -392,10 +392,8 @@
 
   if (langToggleBtn) {
     langToggleBtn.addEventListener("click", () => {
-      if (!window.I18N) return;
-      window.I18N.toggleLang();
-      applyStaticUI();
-      renderAll();
+      const href = langToggleBtn.dataset.langSwitchHref;
+      if (href) window.location.href = href;
     });
   }
 

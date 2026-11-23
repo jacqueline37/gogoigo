@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>囲碁のルールを体験で学ぶ</title>
   <meta name="description" content="「囲碁の基本用語を体験で学ぶ」用語編の前提知識として、呼吸点・アタリ・石を取る・コウなど囲碁の基本ルールを実際に石を打ちながら体験できるページです。" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="canonical" href="https://jacqueline37.github.io/gogoigo/rules.html" />
+  <link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/rules.html" />
+  <link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/rules.html" />
+  <link rel="alternate" hreflang="x-default" href="https://jacqueline37.github.io/gogoigo/rules.html" />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="囲碁の基本用語を体験で学ぶ" />
@@ -36,8 +40,14 @@
 
   gtag('config', 'G-1BF9HSHYEM');
 </script>
+  <script>window.FORCE_LANG = "ja";</script>
 </head>
 <body>
+  <noscript>
+    <p style="max-width: 640px; margin: 24px auto; padding: 16px; font-family: sans-serif; line-height: 1.7;">
+      このサイトは呼吸点・アタリ・石を取る・コウなど、囲碁の基本ルールを実際に石を置きながら体験的に学べるインタラクティブな学習サイトです。動作にはJavaScriptが必要なので、ブラウザでJavaScriptを有効にしてご覧ください。
+    </p>
+  </noscript>
   <div class="app">
     <header class="site-header">
       <div>
@@ -49,10 +59,10 @@
 
       <div class="header-status">
         <div class="status-row">
-          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button">EN</button>
+          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button" data-lang-switch-href="en/rules.html">EN</button>
           <p id="stage-indicator" class="stage-indicator">第1問 / 5</p>
         </div>
-        <a id="index-link" class="ghost-btn nav-link primary" href="index.html">用語編に戻る</a>
+        <a id="index-link" class="ghost-btn nav-link primary" href="index.html">キリ・ツギなどの用語に戻る</a>
       </div>
     </header>
 

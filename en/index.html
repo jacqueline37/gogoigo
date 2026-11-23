@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn Go Terms Hands-On</title>
+  <meta name="description" content="Learn essential Go (Igo) terms — kiri, tsugi, hane, and 19 in total — hands-on by clicking moves on an interactive board. A free learning site." />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="canonical" href="https://jacqueline37.github.io/gogoigo/en/" />
+  <link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/" />
+  <link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://jacqueline37.github.io/gogoigo/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Learn Go Terms Hands-On" />
+  <meta property="og:title" content="Learn Go Terms Hands-On" />
+  <meta property="og:description" content="Learn essential Go (Igo) terms — kiri, tsugi, hane, and 19 in total — hands-on by clicking moves on an interactive board. A free learning site." />
+  <meta property="og:url" content="https://jacqueline37.github.io/gogoigo/en/" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://jacqueline37.github.io/gogoigo/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://jacqueline37.github.io/gogoigo/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF9HSHYEM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1BF9HSHYEM');
+</script>
+  <script>window.FORCE_LANG = "en";</script>
+</head>
+<body>
+  <noscript>
+    <p style="max-width: 640px; margin: 24px auto; padding: 16px; font-family: sans-serif; line-height: 1.7;">
+      This site is an interactive way to learn essential Go terms (kiri, tsugi, hane, and more) by clicking moves on the board. It requires JavaScript — please enable it in your browser.
+    </p>
+  </noscript>
+  <div class="app">
+    <header class="site-header">
+      <div>
+        <h1 id="site-title">Learn Go Terms Hands-On</h1>
+        <p class="lead" id="site-lead">
+          Pick a term from the list on the left, then click the board to test out ‘is this the move?’ as you learn.
+        </p>
+      </div>
+
+      <div class="header-status">
+        <div class="status-row">
+          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button" data-lang-switch-href="../">日本語</button>
+          <p id="stage-indicator" class="stage-indicator">Question 1 / 19</p>
+        </div>
+        <a id="rules-link" class="ghost-btn nav-link primary" href="rules.html">Try liberties and atari first</a>
+        <button id="toggle-sidebar-btn" class="ghost-btn" type="button" aria-expanded="false">
+          Show term list
+        </button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+          <h2 id="sidebar-title">19 Essential Terms</h2>
+          <p class="sidebar-note" id="sidebar-note">
+            Choosing a term shows a short explanation and an example. Get it right, and you can also check the “liberties” (empty intersections adjacent to the connected stones) created by that move.
+          </p>
+          <div id="term-list" class="term-list"></div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div class="card intro-card">
+          <p class="section-label" id="section-label">Term Explanation</p>
+          <h2 id="term-title">Loading...</h2>
+          <p id="term-description" class="term-description"></p>
+          <p id="term-instruction" class="term-instruction"></p>
+        </div>
+
+        <div class="card board-card">
+          <div id="board" class="board" aria-label="Go board"></div>
+          <p id="message" class="message" aria-live="polite"></p>
+          <p id="consequence" class="consequence" aria-live="polite"></p>
+        </div>
+
+        <div class="controls">
+          <button id="prev-btn" type="button">← Previous</button>
+          <button id="reset-btn" type="button">Reset</button>
+          <button id="restart-btn" type="button">Start over</button>
+          <button id="next-btn" type="button">Next →</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../i18n.js"></script>
+  <script src="../go-rules.js"></script>
+  <script src="../board-ui.js"></script>
+  <script src="../stages.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

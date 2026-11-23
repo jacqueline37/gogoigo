@@ -1,26 +1,6 @@
 window.I18N = (() => {
-  const STORAGE_KEY = "gogoigo-lang";
-
   function getLang() {
-    try {
-      return localStorage.getItem(STORAGE_KEY) || "ja";
-    } catch (e) {
-      return "ja";
-    }
-  }
-
-  function setLang(lang) {
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch (e) {
-      /* ignore */
-    }
-  }
-
-  function toggleLang() {
-    const next = getLang() === "ja" ? "en" : "ja";
-    setLang(next);
-    return next;
+    return window.FORCE_LANG === "en" ? "en" : "ja";
   }
 
   const ui = {
@@ -38,7 +18,7 @@ window.I18N = (() => {
         pageTitle: "囲碁の基本用語を体験で学ぶ",
         h1: "囲碁の基本用語を体験で学ぶ",
         lead: "左の一覧から用語を選び、盤面をクリックして「この手かな？」を試しながら覚えるサイトです。",
-        rulesLink: "先に基本ルールを体験する",
+        rulesLink: "呼吸点やアタリを先に体験する",
         sidebarTitle: "19の基本用語",
         sidebarNote:
           "用語を選ぶと、その用語の短い説明と例題が表示されます。正解すると、その手でつながった石の「呼吸点」（石に隣接する空いている交点の数）も確認できます。",
@@ -66,7 +46,7 @@ window.I18N = (() => {
         h1: "囲碁のルールを体験で学ぶ",
         lead:
           "「用語編」に出てくる手筋を理解するための前提知識として、呼吸点・アタリ・取る・コウといった囲碁の基本ルールを実際に石を置きながら体感するページです。",
-        indexLink: "用語編に戻る",
+        indexLink: "キリ・ツギなどの用語に戻る",
         sectionLabel: "ルールの説明",
         retry: "もう一度",
         stageIndicator: (current, total) => `第${current}問 / ${total}`,
@@ -98,7 +78,7 @@ window.I18N = (() => {
         h1: "Learn Go Terms Hands-On",
         lead:
           "Pick a term from the list on the left, then click the board to test out ‘is this the move?’ as you learn.",
-        rulesLink: "Try the rules of Go first",
+        rulesLink: "Try liberties and atari first",
         sidebarTitle: "19 Essential Terms",
         sidebarNote:
           "Choosing a term shows a short explanation and an example. Get it right, and you can also check the “liberties” (empty intersections adjacent to the connected stones) created by that move.",
@@ -126,7 +106,7 @@ window.I18N = (() => {
         h1: "Learn the Rules of Go Hands-On",
         lead:
           "As background for understanding the moves covered in the Terms section, this page lets you experience Go's basic rules — liberties, atari, capturing, and ko — by actually placing stones.",
-        indexLink: "Back to the Terms section",
+        indexLink: "Back to Kiri, Tsugi, and other terms",
         sectionLabel: "Rule Explanation",
         retry: "Retry",
         stageIndicator: (current, total) => `Question ${current} / ${total}`,
@@ -372,5 +352,5 @@ window.I18N = (() => {
     },
   };
 
-  return { getLang, setLang, toggleLang, ui, terms, rulesContent, goRules };
+  return { getLang, ui, terms, rulesContent, goRules };
 })();

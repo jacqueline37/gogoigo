@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>囲碁の基本用語を体験で学ぶ</title>
   <meta name="description" content="囲碁の基本用語（キリ、ツギ、ハネなど19種類）を、盤面をクリックしながら体験的に学べる無料の学習サイトです。" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="canonical" href="https://jacqueline37.github.io/gogoigo/" />
+  <link rel="alternate" hreflang="ja" href="https://jacqueline37.github.io/gogoigo/" />
+  <link rel="alternate" hreflang="en" href="https://jacqueline37.github.io/gogoigo/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://jacqueline37.github.io/gogoigo/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="囲碁の基本用語を体験で学ぶ" />
@@ -36,8 +40,14 @@
 
   gtag('config', 'G-1BF9HSHYEM');
 </script>
+  <script>window.FORCE_LANG = "ja";</script>
 </head>
 <body>
+  <noscript>
+    <p style="max-width: 640px; margin: 24px auto; padding: 16px; font-family: sans-serif; line-height: 1.7;">
+      このサイトは囲碁の基本用語（キリ・ツギ・ハネなど）を、盤面をクリックしながら体験的に学べるインタラクティブな学習サイトです。動作にはJavaScriptが必要なので、ブラウザでJavaScriptを有効にしてご覧ください。
+    </p>
+  </noscript>
   <div class="app">
     <header class="site-header">
       <div>
@@ -49,10 +59,10 @@
 
       <div class="header-status">
         <div class="status-row">
-          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button">EN</button>
+          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button" data-lang-switch-href="en/index.html">EN</button>
           <p id="stage-indicator" class="stage-indicator">第1問 / 19</p>
         </div>
-        <a id="rules-link" class="ghost-btn nav-link primary" href="rules.html">先に基本ルールを体験する</a>
+        <a id="rules-link" class="ghost-btn nav-link primary" href="rules.html">呼吸点やアタリを先に体験する</a>
         <button id="toggle-sidebar-btn" class="ghost-btn" type="button" aria-expanded="false">
           用語一覧を開く
         </button>
