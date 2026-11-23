@@ -36,10 +36,9 @@ window.I18N = (() => {
       },
       index: {
         pageTitle: "囲碁の基本用語を体験で学ぶ",
-        eyebrow: "Interactive Go Terms",
         h1: "囲碁の基本用語を体験で学ぶ",
         lead: "左の一覧から用語を選び、盤面をクリックして「この手かな？」を試しながら覚えるサイトです。",
-        rulesLink: "用語の前提知識：ルールを体験する →",
+        rulesLink: "先に基本ルールを体験する",
         sidebarTitle: "19の基本用語",
         sidebarNote:
           "用語を選ぶと、その用語の短い説明と例題が表示されます。正解すると、その手でつながった石の「呼吸点」（石に隣接する空いている交点の数）も確認できます。",
@@ -64,11 +63,10 @@ window.I18N = (() => {
       },
       rules: {
         pageTitle: "囲碁のルールを体験で学ぶ",
-        eyebrow: "Interactive Go Terms · ルール編（前提知識）",
         h1: "囲碁のルールを体験で学ぶ",
         lead:
           "「用語編」に出てくる手筋を理解するための前提知識として、呼吸点・アタリ・取る・コウといった囲碁の基本ルールを実際に石を置きながら体感するページです。",
-        indexLink: "本編：用語を学ぶ →",
+        indexLink: "用語編に戻る",
         sectionLabel: "ルールの説明",
         retry: "もう一度",
         stageIndicator: (current, total) => `第${current}問 / ${total}`,
@@ -97,11 +95,10 @@ window.I18N = (() => {
       },
       index: {
         pageTitle: "Learn Go Terms Hands-On",
-        eyebrow: "Interactive Go Terms",
         h1: "Learn Go Terms Hands-On",
         lead:
           "Pick a term from the list on the left, then click the board to test out ‘is this the move?’ as you learn.",
-        rulesLink: "Prerequisite: try the rules of Go →",
+        rulesLink: "Try the rules of Go first",
         sidebarTitle: "19 Essential Terms",
         sidebarNote:
           "Choosing a term shows a short explanation and an example. Get it right, and you can also check the “liberties” (empty intersections adjacent to the connected stones) created by that move.",
@@ -126,11 +123,10 @@ window.I18N = (() => {
       },
       rules: {
         pageTitle: "Learn the Rules of Go Hands-On",
-        eyebrow: "Interactive Go Terms · Rules (Prerequisite)",
         h1: "Learn the Rules of Go Hands-On",
         lead:
           "As background for understanding the moves covered in the Terms section, this page lets you experience Go's basic rules — liberties, atari, capturing, and ko — by actually placing stones.",
-        indexLink: "Main: Learn the Terms →",
+        indexLink: "Back to the Terms section",
         sectionLabel: "Rule Explanation",
         retry: "Retry",
         stageIndicator: (current, total) => `Question ${current} / ${total}`,

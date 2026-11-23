@@ -19,6 +19,12 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://jacqueline37.github.io/gogoigo/og-image.png" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Google tag (gtag.js) -->
@@ -35,7 +41,6 @@
   <div class="app">
     <header class="site-header">
       <div>
-        <p class="eyebrow" id="page-eyebrow">Interactive Go Terms · ルール編（前提知識）</p>
         <h1 id="site-title">囲碁のルールを体験で学ぶ</h1>
         <p class="lead" id="site-lead">
           「用語編」に出てくる手筋を理解するための前提知識として、呼吸点・アタリ・取る・コウといった囲碁の基本ルールを実際に石を置きながら体感するページです。
@@ -43,9 +48,11 @@
       </div>
 
       <div class="header-status">
-        <button id="lang-toggle-btn" class="lang-toggle-btn" type="button">EN</button>
-        <p id="stage-indicator" class="stage-indicator">第1問 / 5</p>
-        <a id="index-link" class="ghost-btn nav-link" href="index.html">本編：用語を学ぶ →</a>
+        <div class="status-row">
+          <button id="lang-toggle-btn" class="lang-toggle-btn" type="button">EN</button>
+          <p id="stage-indicator" class="stage-indicator">第1問 / 5</p>
+        </div>
+        <a id="index-link" class="ghost-btn nav-link primary" href="index.html">用語編に戻る</a>
       </div>
     </header>
 

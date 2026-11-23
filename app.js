@@ -16,7 +16,6 @@
   const sidebarEl = document.getElementById("sidebar");
   const langToggleBtn = document.getElementById("lang-toggle-btn");
 
-  const eyebrowEl = document.getElementById("page-eyebrow");
   const siteTitleEl = document.getElementById("site-title");
   const siteLeadEl = document.getElementById("site-lead");
   const rulesLinkEl = document.getElementById("rules-link");
@@ -92,10 +91,14 @@
       btn.className = "term-item";
       btn.type = "button";
 
-      const solved = solvedMap.get(stage.id) ? "✓ " : "";
+      if (solvedMap.get(stage.id)) {
+        btn.classList.add("solved");
+      }
+
       btn.innerHTML = `
         <span class="term-index">${String(index + 1).padStart(2, "0")}</span>
-        <span>${solved}${stageText(stage).title}</span>
+        <span class="term-label">${stageText(stage).title}</span>
+        <span class="term-check" aria-hidden="true"></span>
       `;
 
       if (index === currentStageIndex) {
@@ -133,7 +136,7 @@
   function renderInfo() {
     const stage = getCurrentStage();
     const text = stageText(stage);
-    titleEl.textContent = `${String(currentStageIndex + 1).padStart(2, "0")} ${text.title}`;
+    titleEl.innerHTML = `<span class="stage-number">${String(currentStageIndex + 1).padStart(2, "0")}</span>${text.title}`;
     descriptionEl.textContent = text.description || "";
     instructionEl.textContent = text.instruction || t().defaultInstruction;
   }
@@ -355,7 +358,6 @@
     document.documentElement.lang = lang();
     document.title = strings.pageTitle;
 
-    if (eyebrowEl) eyebrowEl.textContent = strings.eyebrow;
     if (siteTitleEl) siteTitleEl.textContent = strings.h1;
     if (siteLeadEl) siteLeadEl.textContent = strings.lead;
     if (rulesLinkEl) rulesLinkEl.textContent = strings.rulesLink;

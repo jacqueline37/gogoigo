@@ -16,7 +16,6 @@
   const nextBtn = document.getElementById("next-btn");
   const langToggleBtn = document.getElementById("lang-toggle-btn");
 
-  const eyebrowEl = document.getElementById("page-eyebrow");
   const siteTitleEl = document.getElementById("site-title");
   const siteLeadEl = document.getElementById("site-lead");
   const indexLinkEl = document.getElementById("index-link");
@@ -97,7 +96,7 @@
     const current = stage();
     const text = ruleText(current);
     stageIndicatorEl.textContent = t().stageIndicator(state.stageIndex + 1, stages.length);
-    titleEl.textContent = `${String(state.stageIndex + 1).padStart(2, "0")} ${text.title}`;
+    titleEl.innerHTML = `<span class="stage-number">${String(state.stageIndex + 1).padStart(2, "0")}</span>${text.title}`;
     subtitleEl.textContent = text.subtitle || "";
     descriptionEl.textContent = text.description || "";
     objectiveEl.textContent = text.objective || "";
@@ -324,7 +323,6 @@
     document.documentElement.lang = lang();
     document.title = strings.pageTitle;
 
-    if (eyebrowEl) eyebrowEl.textContent = strings.eyebrow;
     if (siteTitleEl) siteTitleEl.textContent = strings.h1;
     if (siteLeadEl) siteLeadEl.textContent = strings.lead;
     if (indexLinkEl) indexLinkEl.textContent = strings.indexLink;
